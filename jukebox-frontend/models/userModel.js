@@ -1,6 +1,6 @@
 // Simulate a user model with hardcoded data
 const users = [
-    { email: "admin@admin.com", password: "1234" },
+    { email: "arul.1994@y7mail.com", password: "1234" },
     { email: "user@example.com", password: "pass123" }
   ];
   
