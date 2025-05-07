@@ -1,48 +1,49 @@
-// Import utility functions from user model
-import { emailExists, addUser } from '../models/userModel.js';
-
-// Main function to handle registration form submission
 export function handleRegister(event) {
-  event.preventDefault(); // Prevent default form submission
+  event.preventDefault();
 
-  // Get input values and trim extra spaces
-  const name = document.getElementById("regName").value.trim();
+  const username = document.getElementById("regName").value.trim();
   const email = document.getElementById("regEmail").value.trim();
   const password = document.getElementById("regPassword").value;
   const msgBox = document.getElementById("regMessage");
 
-  // Check if any field is empty
-  if (!name || !email || !password) {
+  // Input validations
+  if (!username || !email || !password) {
     msgBox.textContent = "All fields are required.";
     msgBox.style.color = "red";
     return;
   }
 
-  // Validate name, only letters and spaces allowed
-  if (!/^[A-Za-z\s]+$/.test(name)) {
+  if (!/^[A-Za-z\s]+$/.test(username)) {
     msgBox.textContent = "Name must contain only letters.";
     msgBox.style.color = "red";
     return;
   }
 
-  // Validate password, must contain both letters and numbers
   if (!/[A-Za-z]/.test(password) || !/\d/.test(password)) {
     msgBox.textContent = "Password must include letters and numbers.";
     msgBox.style.color = "red";
     return;
   }
 
-  // Check if email is already registered, in-memory check
-  if (emailExists(email)) {
-    msgBox.textContent = "Email already registered.";
-    msgBox.style.color = "red";
-    return;
-  }
-
-  // Add user to temporary in-memory list 
-  addUser(email, password);
-
-  // Show success message
-  msgBox.textContent = "Registration successful!";
-  msgBox.style.color = "lightgreen";
+  // Send registration request to backend
+  fetch("http://localhost:3000/api/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, email, password })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        msgBox.textContent = "Registration successful!";
+        msgBox.style.color = "lightgreen";
+      } else {
+        msgBox.textContent = data.message || "Registration failed.";
+        msgBox.style.color = "red";
+      }
+    })
+    .catch(err => {
+      console.error("Register error:", err);
+      msgBox.textContent = "Server error. Please try again later.";
+      msgBox.style.color = "red";
+    });
 }
