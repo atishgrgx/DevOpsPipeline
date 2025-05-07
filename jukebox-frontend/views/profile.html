@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Profile</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="../public/css/style.css">
+</head>
+<body>
+
+  <!-- Top-left Logo -->
+  <img src="../public/images/logo.png" alt="Logo" class="logo-top">
+
+  <!-- Navigation Bar -->
+  <nav class="teal">
+    <div class="nav-wrapper container" style="display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center;">
+        <img src="../public/images/logo.png" alt="Logo" style="height: 45px; margin-right: 10px;">
+        <span class="white-text" style="font-size: 1.5rem;">Juke Box</span>
+      </div>
+      <ul style="display: flex; gap: 20px;">
+        <li><a href="profile.html">Profile</a></li>
+        <li><a href="login.html" onclick="sessionStorage.clear()">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Profile & Chat Section -->
+  <div class="container" style="margin-top: 40px;">
+    <div class="row">
+
+      <!-- Profile Info (Left Side) -->
+      <div class="col s12 m6">
+        <div class="login-container">
+          <h2>User Profile</h2>
+          <i class="material-icons large teal-text">account_circle</i>
+          <p><strong>Name:</strong> <span id="userName">User</span></p>
+          <p><strong>Email:</strong> <span id="userEmail">email@example.com</span></p>
+        </div>
+      </div>
+
+
+<!-- Chat Box (Right Side) -->
+<div class="col s12 m6">
+    <div class="chat-container" style="min-height: 450px;">
+      <h5 class="white-text center-align">Join a Genre Room</h5>
+  
+      <!-- Genre Selection -->
+      <div class="input-field">
+        <select id="genreSelect" class="browser-default">
+          <option value="" disabled selected>Select a genre</option>
+          <option value="pop">🎤 Pop</option>
+          <option value="rock">🎸 Rock</option>
+          <option value="edm">🎧 EDM</option>
+          <option value="jazz">🎹 Jazz</option>
+          <option value="classical">🎻 Classical</option>
+        </select>
+      </div>
+  
+      <!-- Room Title -->
+      <h6 id="roomTitle" class="white-text center-align"></h6>
+  
+      <!-- Chat Messages -->
+      <div id="chatBox"></div>
+  
+      <!-- Chat Input -->
+      <form id="chatForm" style="display: none;">
+        <div class="input-field" style="margin-bottom: 0;">
+          <input id="message" type="text" placeholder="Type your message..." />
+        </div>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+  
+  
+  
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2025 Juke Box Music Studio. All rights reserved.</p>
+  </footer>
+
+  <!-- Load user data -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const name = sessionStorage.getItem("userName") || "Guest";
+      const email = sessionStorage.getItem("userEmail") || "Not available";
+      document.getElementById("userName").textContent = name;
+      document.getElementById("userEmail").textContent = email;
+    });
+  </script>
+
+  <!-- Chat functionality scripts -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="/js/chat.js"></script>
+</body>
+</html>
