@@ -8,3 +8,11 @@ const users = [
     return users.find(user => user.email === email && user.password === password);
   }
   
+  export function emailExists(email) {
+    return users.some(user => user.email === email);
+  }
+  
+  export function addUser(email, password) {
+    users.push({ email, password });
+  }
+  
