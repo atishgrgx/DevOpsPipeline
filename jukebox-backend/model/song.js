@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
-const trackSchema = new mongoose.Schema({
+const songSchema = new mongoose.Schema({
   name: {
     type: String,
     required: false,
   },
-  trackId: {
+  songId: {
     type: String,
     unique: true,  
     required: true,
@@ -20,15 +20,15 @@ const trackSchema = new mongoose.Schema({
   album: {
     name: String,
     id: String,
-    href: String, 
+    href: String,
     images: [
       {
-        url: String, 
+        url: String,  
         width: Number,
         height: Number
       }
     ],
-    release_date: String, 
+    release_date: String,  
   },
   duration_ms: {
     type: Number,  
@@ -64,4 +64,4 @@ const trackSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Track', trackSchema);
+module.exports = mongoose.model('Song', songSchema);
