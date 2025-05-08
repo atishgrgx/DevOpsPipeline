@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juke Box</title>
     <!-- Link to external CSS -->
-    <link href="../public/css/home.css" rel="stylesheet">
+    <link href="../public/css/playlist.css" rel="stylesheet">
     <!-- Materialize CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
     <!-- Navbar -->
@@ -54,37 +55,51 @@
     </li>
   </ul>
   
- <main>
-    <!-- Hero Section -->
-    <div class="section">
-        <div class="row">
-            <div class="col s12 m8 offset-m2 l6 offset-l3 center-align">
-                <p class="custom-text white-text">Want to Discover New Favorite Based.<br>On Your Taste</p>
-                <a href="#" class="btn custom-btn pink white-text">CLICK HERE</a>
-            </div>
-        </div>
-    </div>
-
     <!-- === Carousel Section === -->
     <section class="recommended-section">
-        <div class="container">
-            <!-- Trending Songs -->
-            <h5 class="section-title white-text">Trending Songs</h5>
-            <div id="carousel-trending" class="carousel-trending"></div>
+      <div class="container">
+          <!-- playlists section  -->
+          <h5 class="section-title white-text">Your Collections</h5>
+          <div id="carousel-trending" class="carousel-trending"></div>
+      </div>
+  </section>
+  
 
-            <!-- Popular Artists -->
-            <h5 class="section-title white-text" style="margin-top: 2rem;">Popular Artists</h5>
-            <div id="carousel-artists" class="carousel-artists"></div>
-        </div>
-    </section>
-
-    <!-- Chat Button -->
-    <div class="chat-icon">
-        <a href="#" class="chat-btn btn-floating btn-large pink darken-1">
-            <img src="../public/images/chat.png" alt="Chat" style="height: 50px;">
-        </a>
+  <!-- Playlist Modal -->
+<div id="playlist-modal" class="playlist-modal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content">
+    <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+    <div class="modal-search-wrapper">
+      <span class="input-icon"><i class="material-icons">search</i></span>
+      <input type="text" id="modal-search" placeholder="Search in playlist..." class="modal-search-input">
     </div>
-</main>
+    <div class="playlist-input-wrapper">
+      <input type="text" placeholder="Playlist Name" class="playlist-input" id="playlist-name">
+      <span class="input-icon"><i class="material-icons">edit</i></span>
+    </div>
+    <div class="playlist-actions">
+      <button class="export-btn">Export to Spotify</button>
+      <button class="delete-btn">Delete Playlist</button>
+    </div>
+    <div class="playlist-table-wrapper">
+      <table class="playlist-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Song Title</th>
+              <th>Album</th>
+              <th><i class="material-icons">schedule</i></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="playlist-songs-body">
+            <!-- Songs dynamically inserted -->
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>
     <!-- Footer -->
     <footer class="page-footer black">
         <div class="container">
@@ -104,8 +119,8 @@
     <!-- Materialize & jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="../public/js/home.js"></script>
     <script src="../public/js/sidenave.js"></script>
+    <script src="../public/js/playlist.js"></script>
     <!-- Carousel Rendering Script -->
 </body>
 </html>
