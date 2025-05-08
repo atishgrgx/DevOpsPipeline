@@ -18,8 +18,6 @@ const io = socketIO(server, {
   }
 });
 
-
-const app = express();
 const PORT = process.env.PORT || 3000;
 // Routes
 const authRoutes = require('./routes/authRoutes');
