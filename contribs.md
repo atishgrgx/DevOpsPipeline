@@ -5,3 +5,12 @@
 - Collaborated with teammates to enable backend connectivity for Login and Register pages
 - Designed high-fidelity Figma prototypes for Login, Register, Profile, and Admin pages
 - Added design reference to Trello for UI review and team feedback
+
+## Varniah Kangeswaran
+
+- Contributed  to Software Requirements Specification (SRS) by writing the User Characteristics Constraints, Assumptions and Dependencies.
+- Designed high-fidelity Figma prototypes for Landing Page, Home Page, song recommendation page, create playlist page, Playlist page, manage playlist page and about us page
+- Implemented Frontend pages such as Landing, Home, Song recommendation, Create Playlist, Playlist, manage playlist and about us
+- Implemented Responsive UI
+- Commited the Fronend Code to github
+- Update the stories in Trello.
