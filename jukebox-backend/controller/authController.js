@@ -22,7 +22,7 @@ const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create and save new user
-    const newUser = new User({username,email,password: hashedPassword});
+    const newUser = new User({username,email,password: hashedPassword, role: 'user' }); //force
     await newUser.save();
 
     res.status(201).json({ message: 'User registered successfully' });
@@ -56,17 +56,19 @@ const login = async (req, res) => {
     }
 
     // Create JWT token
-    const token = jwt.sign({ id: user._id },process.env.JWT_SECRET,{ expiresIn: '1h' });
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
 
     // Send response with token and user info
     res.status(200).json({
       token,
       user: {
-        id: user._id,
         username: user.username,
-        email: user.email
+        email: user.email,
+        role: user.role // helpful for frontend
       }
     });
+    
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ message: 'Something went wrong', error: err.message });
