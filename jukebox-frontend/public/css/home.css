@@ -211,3 +211,15 @@ footer .icons {
     justify-content: center;
   }
 }
+/* Ensure the row and column are using flex to center image */
+.row {
+  display: flex;
+  justify-content: center;  /* Center the content horizontally */
+  align-items: center;  /* Center the content vertically */
+}
+
+.col {
+  display: flex;
+  justify-content: center;  /* Center content horizontally in the column */
+  align-items: center;  /* Center content vertically in the column */
+}
