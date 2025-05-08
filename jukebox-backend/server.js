@@ -7,7 +7,7 @@ const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
+// Routes
 const authRoutes = require('./routes/authRoutes');
 
 // ✅ Apply CORS BEFORE any routes
@@ -16,7 +16,7 @@ app.use(cors());
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors()); // allow all origins during development
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URL, {
