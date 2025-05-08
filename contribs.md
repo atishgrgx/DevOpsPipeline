@@ -22,3 +22,12 @@
 - Implemented backend component to manage songs in the system by integrating Spotify API.
 - Created MongoDB atlas and configured the connectivity with the backend application.
 - Creating and maintaining trello tasks.
+
+## Dhanush Soma
+
+- I have contributed to the Software Requirements Specification (SRS) by writing the Introduction of the document, UML designs and small contributions to the Non-Functional Requirements, as well as the editing of the document.
+- I have developed the git structure for the codebase for the project, added collaborators with adequate access rights, created the branching logic and added restrictions on the main branch to prevent unwanted changes.
+- I have updated my Trello board with my upcoming and current tasks which amount to around 65 hours of contribution.
+- I have implemented the recommendation logics for the songs using machine learning model like K-Means clustering and K Nearest Neighbours. I have done so for mood-based logic, song-based logic and playlist based logic.
+- I have added the code to insert and remove data from the dataset in Mongo Atlas (currently I have done it in Python for convenience, but I may change to JS based on requirements).
+- I have also developed the Flask application needed to work as the server to access the models whenever required (currently it is returning html files for my convenience, but this will be changed later while merging the codes).
