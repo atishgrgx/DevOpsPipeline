@@ -19,7 +19,9 @@ const io = socketIO(server, {
 });
 
 
+const app = express();
 const PORT = process.env.PORT || 3000;
+// Routes
 const authRoutes = require('./routes/authRoutes');
 const userListRoutes = require('./routes/userlistRoutes');
 // Apply Express CORS before routes
@@ -32,7 +34,7 @@ app.use('/api/users', userListRoutes);
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors()); // allow all origins during development
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URL, {
