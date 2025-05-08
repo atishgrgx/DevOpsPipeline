@@ -1,126 +1,202 @@
-.logo-top {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 120px;
-  }
-  
-  body {
-    background-image: url('../images/bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 100vh;
-    margin: 0;
-    font-family: Arial, sans-serif;
-    position: relative;
-  }
-  
-  
-  .login-container {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-    text-align: center;
-    max-width: 320px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 👈 This centers child elements */
-  }
-  
-  .center-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: calc(100vh - 64px); /* enough space for nav */
-    padding-top: 40px;
-  }
+/* === Global Background Layer === */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('../images/bg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  z-index: -1;
+}
 
-  form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 👈 Center inputs */
-  }
-  
-  input[type="text"],
-  input[type="email"],
-  input[type="password"] {
-    width: 90%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    box-shadow: 0 0 5px rgba(245, 244, 244, 0.2);
-  }
-  
-  button {
-    width: 90%;
-    padding: 10px;
-    font-size: 14px;
-    background-color: #6200ea;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #3700b3;
-  }
-  
-  h2,
-label {
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  position: relative;
+  font-family: Arial, sans-serif;
+  background: transparent;
+}
+
+/* === Navigation Bar === */
+.nav-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo-title {
+  display: flex;
+  align-items: center;
+}
+
+.logo-img, .logo-top {
+  height: 80px;
+  width: 80px;
+  margin-right: 10px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.brand-title {
+  font-size: 1.5rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+/* === Center Wrapper for Login/Register === */
+.center-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 100px);
+  padding-top: 40px;
+}
+
+/* === Login/Register Form Container === */
+.login-container {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  max-width: 350px;
+  width: 100%;
+  color: white;
+}
+
+/* === Form Elements === */
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+select {
+  width: 90%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+button {
+  width: 90%;
+  padding: 10px;
+  font-size: 14px;
+  background-color: #6200ea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #3700b3;
+}
+
+/* === Text Styling === */
+h2, label {
   color: #fff;
   font-weight: bold;
-  text-shadow: 1px 1px 2px #000; /* white outline effect on dark bg */
+  text-shadow: 1px 1px 2px #000;
 }
-  
 
-.footer {
-    position: absolute;
-    bottom: 10px;
-    width: 100%;
-    text-align: center;
-    color: #ccc;
-    font-size: 12px;
-  }
-  
-  .register-link {
-    margin-top: 15px;
-    font-size: 14px;
-    color: #fff;
-    text-shadow: 1px 1px 2px #000;
-  }
-  
-  .register-link a {
-    color: #ffcc00;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  .register-link a:hover {
-    text-decoration: underline;
-  }
-  
- /* Chat container box */
-.chat-container {
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 12px;
-  padding: 20px;
+.register-link {
+  margin-top: 15px;
+  font-size: 14px;
   color: #fff;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  text-shadow: 1px 1px 2px #000;
 }
 
-/* Chat display area */
+.register-link a {
+  color: #ffcc00;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+/* === Profile Page === */
+body.profile-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body.profile-page main {
+  flex: 1 0 auto;
+}
+
+.main-content {
+  margin-top: 50px;
+}
+
+.user-name {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.personal-info-wrapper {
+  margin-top: 30px;
+}
+
+.personal-form-container {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background-color: #ffffff;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  color: #000;
+}
+
+.personal-form-container.show {
+  display: block;
+  opacity: 1;
+}
+
+/* === Chat Section === */
+.chat-container {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 30px;
+  border-radius: 12px;
+  color: white;
+  margin-top: 40px;
+}
+
 #chatBox {
   background: rgba(255, 255, 255, 0.2);
   height: 200px;
@@ -130,7 +206,6 @@ label {
   border-radius: 10px;
 }
 
-/* Chat messages */
 #chatBox div {
   margin-bottom: 8px;
   padding: 6px 10px;
@@ -138,34 +213,31 @@ label {
   border-radius: 6px;
 }
 
-/* Chat input styling */
-#message {
-  background-color: #fff;
-  border-radius: 8px;
+#chatForm input[type="text"] {
+  background: white;
+  color: black;
   padding: 10px;
+  border-radius: 8px;
+  border: none;
 }
 
-  
-  
-  /* Chat Input */
-  #chatForm input[type="text"] {
-    background: white;
-    color: black;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-  }
-  
-  /* Chat Send Button */
-  #chatForm button {
-    background-color: #6a1b9a;
-    border-radius: 8px;
-    margin-top: 10px;
-    width: 100%;
-  }
-  
-  #chatForm button:hover {
-    background-color: #4a148c;
-  }
-  
-  
+#chatForm button {
+  background-color: #6a1b9a;
+  border-radius: 8px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+#chatForm button:hover {
+  background-color: #4a148c;
+}
+
+/* === Footer === */
+.footer {
+  text-align: center;
+  color: #ccc;
+  font-size: 12px;
+  padding: 10px;
+  background-color: #004d40;
+}
+
