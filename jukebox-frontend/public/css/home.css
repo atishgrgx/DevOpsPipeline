@@ -1,0 +1,75 @@
+/* Ensure the body takes full height */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-size: cover; /* Ensures the image covers the whole screen */
+    background-position: center; /* Centers the background image */
+    background-attachment: fixed; 
+    background: linear-gradient(165deg, var(--THEME-BLUE, #1A0648) 29.89%, #831B58 103.18%, var(--THEME-PINK, #ED2F67) 110.49%);
+}
+
+/* Sticky footer at the bottom */
+footer {
+    margin-top: auto;
+}
+
+/* Make navbar sticky */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+/* Apply margin-left to the logo */
+.brand-logo {
+    margin-left: 100px; /* Adjust the value as needed */
+    position: relative;
+}
+.hide-on-med-and-down{
+    margin-right: 100px;
+
+}
+.icons{
+    position: relative;
+}
+
+.start{
+justify-content: center;
+align-items: center;
+margin-left: 210px;
+}
+.user{
+    margin-top: 8px;
+}
+.chat-icon {
+    position: fixed;
+    bottom: 80px;
+    right: 100px;
+    z-index: 999;
+}
+.nav-big a {
+    font-size: 15px; /* or smaller if needed */
+    padding: 20 10px;
+    margin-top: 15px;
+
+}
+.nav-small a {
+    font-size: 10px; /* or smaller if needed */
+    padding: 20 10px;
+}
+.hide-on-med-and-downn{
+    margin-right: 175px;
+}
+.custom-text {
+    font-size: 16px !important;
+    line-height: 1.4;
+    margin-bottom: 20px;
+  }
+  
+  .custom-btn {
+    font-size: 10px !important;
+    padding: 8px 16px !important;
+    height: auto !important;
+    line-height: normal !important;
+  }
+  

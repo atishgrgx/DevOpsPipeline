@@ -1,20 +1,25 @@
 require('dotenv').config(); // Load .env variables
 
-// Import necessary modules
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const cors = require('cors'); 
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const cors = require('cors');
 // Routes
 const authRoutes = require('./routes/authRoutes');
 
-app.use(express.json()); // Tells the app to parse incoming requests with JSON body
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from 'public' folder
+// ✅ Apply CORS BEFORE any routes
+app.use(cors());
+
+// Middleware
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors()); // allow all origins during development
 
+// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -28,10 +33,11 @@ mongoose.connection.on('error', (err) => {
   console.error('❌ MongoDB connection error:', err);
 });
 
+// Routes
 app.use('/api/auth', authRoutes);
 
-// Start the server and listen on the specified port
+// Start server
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-    console.log('Type Ctrl+C to shut down the web server');
+  console.log(`Server running at http://localhost:${PORT}`);
+  console.log('Type Ctrl+C to shut down the web server');
 });
