@@ -1,32 +1,19 @@
 // public/js/home.js
 
-const songs = [
-  { title: 'Old Phone', artist: 'Ed Sheeran', img: '../public/images/play 6.png' },
-  { title: 'Show Me Love', artist: 'Honey Tyla', img: '../public/images/song 4.png' },
-  { title: 'Egypt - Remix', artist: 'Ed Sheeran', img: '../public/images/song 1.png' },
-  { title: 'Egypt - Remix', artist: 'Ed Sheeran', img: '../public/images/song 1.png' },
-  { title: 'Egypt - Remix', artist: 'Ed Sheeran', img: '../public/images/song 1.png' },
-  { title: 'Egypt - Remix', artist: 'Ed Sheeran', img: '../public/images/play 6.png' },
-  { title: 'Egypt - Remix', artist: 'Ed Sheeran', img: '../public/images/song 1.png' },
-  { title: 'Egypt - Remix', artist: 'Ed Sheeran', img: '../public/images/song 1.png' },
-  { title: 'Egypt - Remix', artist: 'Ed Sheeran', img: '../public/images/song 1.png' },
-  { title: 'Egypt - Remix', artist: 'Ed Sheeran', img: '../public/images/song 1.png' },
-  { title: 'Egypt - Remix', artist: 'Honey Tyla', img: '../public/images/play 6.png' }
+const playlist = [
+  { title: 'Old Phone', img: '../public/images/play 6.png' },
+  { title: 'Show Me Love', img: '../public/images/song 4.png' },
+  { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
+  { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
+  { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
+  { title: 'Egypt - Remix', img: '../public/images/play 6.png' },
+  { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
+  { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
+  { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
+  { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
+  { title: 'Egypt - Remix', img: '../public/images/play 6.png' }
 ];
 
-const artists = [
-  { name: 'Ed Sheeran', label: 'Artist', img: '../public/images/song 1.png' },
-  { name: 'Beyoncé', label: 'Artist', img: '../public/images/song 1.png' },
-  { name: 'Drake', label: 'Honey Tyla', img: '../public/images/song 4.png' },
-  { name: 'Drake', label: 'Artist', img: '../public/images/song 4.png' },
-  { name: 'Drake', label: 'Honey Tyla', img: '../public/images/song 4.png' },
-  { name: 'Drake', label: 'Artist', img: '../public/images/song 4.png' },
-  { name: 'Drake', label: 'Artist', img: '../public/images/song 4.png' },
-  { name: 'Drake', label: 'Honey Tyla', img: '../public/images/song 4.png' },
-  { name: 'Drake', label: 'Artist', img: '../public/images/play 6.png' },
-  { name: 'Drake', label: 'Artist', img: '../public/images/song 4.png' },
-  { name: 'Drake', label: 'Artist', img: '../public/images/play 6.png' }
-];
 
 function createCard(item, type) {
   const wrapper = document.createElement('div');
@@ -48,10 +35,14 @@ function createCard(item, type) {
   heading.classList.add(type === 'song' ? 'song-title' : 'artist-name');
   content.appendChild(heading);
 
-  const para = document.createElement('p');
-  para.textContent = type === 'song' ? item.artist : item.label;
-  para.classList.add(type === 'song' ? 'song-artist' : 'artist-label');
-  content.appendChild(para);
+
+  const button = document.createElement('button');
+  button.textContent = 'Explore';
+  button.classList.add('explore-button'); // Add this class for styling
+  button.addEventListener('click', () => {
+    openPlaylistModal();
+  });
+  content.appendChild(button);
 
   card.appendChild(content);
   wrapper.appendChild(card);
@@ -61,8 +52,123 @@ function createCard(item, type) {
 function renderCarousels() {
   const trendingContainer = document.getElementById('carousel-trending');
   const artistsContainer = document.getElementById('carousel-artists');
-  songs.forEach(song => trendingContainer.appendChild(createCard(song, 'song')));
-  artists.forEach(art => artistsContainer.appendChild(createCard(art, 'artist')));
+  playlist.forEach(song => trendingContainer.appendChild(createCard(song, 'song')));
 }
 
+function openPlaylistModal() {
+  const modal = document.getElementById('playlist-modal');
+  if (modal) {
+    modal.classList.add('active');
+    renderPlaylistSongs(); // Render songs when modal opens
+  }
+}
+
+
+function closePlaylistModal() {
+  const modal = document.getElementById('playlist-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+document.getElementById('modal-close-btn').addEventListener('click', () => {
+  const modal = document.getElementById('playlist-modal');
+  if (modal) {
+    modal.classList.remove('active');
+  }
+});
+
+
 document.addEventListener('DOMContentLoaded', renderCarousels);
+
+const playlistSongs = [
+  {
+    title: 'Adiye – From “Bachelor”',
+    artist: 'Dhibu Ninan Thomas',
+    album: 'Adiye (From “Bachelor”)',
+    duration: '4:32',
+    image: '../public/images/play 6.png'
+  },
+  {
+    title: 'Adiye – From “Bachelor”',
+    artist: 'Dhibu Ninan Thomas',
+    album: 'Adiye (From “Bachelor”)',
+    duration: '4:32',
+    image: '../public/images/song 1.png'
+  },
+  {
+    title: 'Adiye – From “Bachelor”',
+    artist: 'Dhibu Ninan Thomas',
+    album: 'Adiye (From “Bachelor”)',
+    duration: '4:32',
+    image: '../public/images/song 1.png'
+  },
+  {
+    title: 'Adiye – From “Bachelor”',
+    artist: 'Dhibu Ninan Thomas',
+    album: 'Adiye (From “Bachelor”)',
+    duration: '4:32',
+    image: '../public/images/song 1.png'
+  },
+  {
+    title: 'Adiye – From “Bachelor”',
+    artist: 'Dhibu Ninan Thomas',
+    album: 'Adiye (From “Bachelor”)',
+    duration: '4:32',
+    image: '../public/images/song 1.png'
+  },
+  {
+    title: 'Adiye – From “Bachelor”',
+    artist: 'Dhibu Ninan Thomas',
+    album: 'Adiye (From “Bachelor”)',
+    duration: '4:32',
+    image: '../public/images/song 1.png'
+  },
+  // Add more songs as needed...
+];
+
+function renderPlaylistSongs() {
+  const tbody = document.getElementById('playlist-songs-body');
+  tbody.innerHTML = ''; // Clear existing rows
+
+  playlistSongs.forEach((song, index) => {
+    const row = document.createElement('tr');
+
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td>
+        <div style="display: flex; align-items: center;">
+          <img src="${song.image}" alt="${song.title}" style="width: 40px; height: 40px; margin-right: 10px;">
+          <div>
+            <div style="font-weight: 600;">${song.title}</div>
+            <div style="font-size: 12px; color: gray;">${song.artist}</div>
+          </div>
+        </div>
+      </td>
+      <td>${song.album}</td>
+      <td>${song.duration}</td>
+      <td>
+        <button class="remove-button" data-index="${index}" style="
+          background-color: transparent;
+          color: red;
+          border: none;
+          cursor: pointer;
+          font-size: 16px;
+        ">
+          Remove
+        </button>
+      </td>
+    `;
+
+    tbody.appendChild(row);
+  });
+
+  // Attach remove event to each button
+  const removeButtons = document.querySelectorAll('.remove-button');
+  removeButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+      const songIndex = parseInt(e.target.getAttribute('data-index'), 10);
+      playlistSongs.splice(songIndex, 1); // Remove song
+      renderPlaylistSongs(); // Re-render table
+    });
+  });
+}
+

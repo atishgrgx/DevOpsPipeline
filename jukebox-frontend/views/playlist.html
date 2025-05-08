@@ -10,6 +10,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
     <!-- Navbar -->
@@ -54,80 +55,51 @@
     </li>
   </ul>
   
-  <main class="container">
-    <h4 class="white-text center-align">Your Favorite Collections</h4>
-  
-    <div class="row">
-      <div class="col s6 m3">
-        <div class="collection-item center-align">
-          <img src="../public/images/song 1.png" alt="Raja Hits" class="collection-img">
-          <p class="collection-title">Raja Hits</p>
-          <a href="#" class="btn explore-btn">Explore</a>
-        </div>
+    <!-- === Carousel Section === -->
+    <section class="recommended-section">
+      <div class="container">
+          <!-- playlists section  -->
+          <h5 class="section-title white-text">Your Collections</h5>
+          <div id="carousel-trending" class="carousel-trending"></div>
       </div>
-  
-      <div class="col s6 m3">
-        <div class="collection-item center-align">
-          <img src="../public/images/song 1.png" alt="Gym Hits" class="collection-img">
-          <p class="collection-title">Gym Hits</p>
-          <a href="#" class="btn explore-btn">Explore</a>
-        </div>
-      </div>
-  
-      <div class="col s6 m3">
-        <div class="collection-item center-align">
-          <img src="../public/images/song 1.png" alt="Mogathirai" class="collection-img">
-          <p class="collection-title">Mogathirai</p>
-          <a href="#" class="btn explore-btn">Explore</a>
-        </div>
-      </div>
-  
-      <div class="col s6 m3">
-        <div class="collection-item center-align">
-          <img src="../public/images/song 1.png" alt="Calm Melodies" class="collection-img">
-          <p class="collection-title">Calm Melodies</p>
-          <a href="#" class="btn explore-btn">Explore</a>
-        </div>
-      </div>
-    </div>
-  
-    <div class="row">
-      <div class="col s6 m3">
-        <div class="collection-item center-align">
-          <img src="../public/images/song 1.png" alt="Raja Hits 2" class="collection-img">
-          <p class="collection-title">Raja Hits</p>
-          <a href="#" class="btn explore-btn">Explore</a>
-        </div>
-      </div>
-  
-      <div class="col s6 m3">
-        <div class="collection-item center-align">
-          <img src="../public/images/song 1.png" alt="Actor Hits" class="collection-img">
-          <p class="collection-title">Raja Hits</p>
-          <a href="#" class="btn explore-btn">Explore</a>
-        </div>
-      </div>
-  
-      <div class="col s6 m3">
-        <div class="collection-item center-align">
-          <img src="../public/images/song 1.png" alt="Hariharan Hits" class="collection-img">
-          <p class="collection-title">Raja Hits</p>
-          <a href="#" class="btn explore-btn">Explore</a>
-        </div>
-      </div>
-  
-      <div class="col s6 m3">
-        <div class="collection-item center-align">
-          <img src="../public/images/song 1.png" alt="Rihanna" class="collection-img">
-          <p class="collection-title">Raja Hits</p>
-          <a href="#" class="btn explore-btn">Explore</a>
-        </div>
-      </div>
-    </div>
-  </main>
-  
+  </section>
   
 
+  <!-- Playlist Modal -->
+<div id="playlist-modal" class="playlist-modal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content">
+    <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+    <div class="modal-search-wrapper">
+      <span class="input-icon"><i class="material-icons">search</i></span>
+      <input type="text" id="modal-search" placeholder="Search in playlist..." class="modal-search-input">
+    </div>
+    <div class="playlist-input-wrapper">
+      <input type="text" placeholder="Playlist Name" class="playlist-input" id="playlist-name">
+      <span class="input-icon"><i class="material-icons">edit</i></span>
+    </div>
+    <div class="playlist-actions">
+      <button class="export-btn">Export to Spotify</button>
+      <button class="delete-btn">Delete Playlist</button>
+    </div>
+    <div class="playlist-table-wrapper">
+      <table class="playlist-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Song Title</th>
+              <th>Album</th>
+              <th><i class="material-icons">schedule</i></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="playlist-songs-body">
+            <!-- Songs dynamically inserted -->
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>
     <!-- Footer -->
     <footer class="page-footer black">
         <div class="container">
@@ -137,7 +109,7 @@
                 </div>
                 <div class="col l6 s12 right-align icons">
                     <a href="#" class="btn black"><img src="../public/images/Facebook.png" height="30px" alt="Facebook"></a>
-                    <a href="#" class="btn black"><img src="../public/images/Twiteer.png" height="30px" alt="Twitter"></a>
+                    <a href="#" class="btn black"><img src="../public/images/Twitter.png" height="30px" alt="Twitter"></a>
                     <a href="#" class="btn black"><img src="../public/images/Instagram.png" height="30px" alt="Instagram"></a>
                 </div>
             </div>
@@ -148,6 +120,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="../public/js/sidenave.js"></script>
+    <script src="../public/js/playlist.js"></script>
     <!-- Carousel Rendering Script -->
 </body>
 </html>

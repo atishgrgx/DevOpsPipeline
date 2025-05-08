@@ -61,7 +61,7 @@ const playlistSongs = [
     artist: 'Dhibu Ninan Thomas',
     album: 'Adiye (From “Bachelor”)',
     duration: '4:32',
-    image: '../public/images/song 1.png'
+    image: '../public/images/play 6.png'
   },
   {
     title: 'Adiye – From “Bachelor”',
