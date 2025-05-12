@@ -4,7 +4,7 @@ from pymongo import MongoClient
 df = pd.read_csv("jukebox-backend/recom_model/filtered_data.csv")
 
 # Replace this with your actual connection URI
-client = MongoClient("mongodb+srv://jukeboxuser:jukeboxuser@jukeboxdb.v158hmf.mongodb.net/")
+client = MongoClient("mongodb+srv://username:password@jukeboxdb.v158hmf.mongodb.net/")
 
 # Run the connectionStatus command to get your privileges
 status = client.admin.command("connectionStatus")
