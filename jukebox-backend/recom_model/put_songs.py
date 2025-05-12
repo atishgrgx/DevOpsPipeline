@@ -4,7 +4,7 @@ from pymongo import MongoClient
 df = pd.read_csv("jukebox-backend/recom_model/filtered_data.csv")
 
 # Replace this with your actual connection URI
-client = MongoClient("mongodb+srv://dhanushsoma17:dhanushsoma17@jukeboxdb.v158hmf.mongodb.net/")
+client = MongoClient("mongodb+srv://jukeboxuser:jukeboxuser@jukeboxdb.v158hmf.mongodb.net/")
 
 # Run the connectionStatus command to get your privileges
 status = client.admin.command("connectionStatus")
@@ -27,10 +27,10 @@ db = client["JUKEBOXDB"]
 collection = db["songs_dataset"]
 print(collection.find_one())
 
-collection.delete_many({})
-# Convert DataFrame to dictionary records
-records = df.to_dict(orient="records")
+# collection.delete_many({})
+# # Convert DataFrame to dictionary records
+# records = df.to_dict(orient="records")
 
-# Insert into MongoDB
-result = collection.insert_many(records)
-print(f"Inserted {len(result.inserted_ids)} documents.")
+# # Insert into MongoDB
+# result = collection.insert_many(records)
+# print(f"Inserted {len(result.inserted_ids)} documents.")
