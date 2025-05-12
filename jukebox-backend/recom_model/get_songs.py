@@ -2,7 +2,7 @@ from pymongo import MongoClient
 import pandas as pd
 
 # Connect to MongoDB Atlas
-client = MongoClient("mongodb+srv://dhanushsoma17:dhanushsoma17@jukeboxdb.v158hmf.mongodb.net/")
+client = MongoClient("mongodb+srv://username:password@jukeboxdb.v158hmf.mongodb.net/")
 db = client["JukeBoxDB"]  # Replace with your DB name
 
 # Dictionary to hold DataFrames
