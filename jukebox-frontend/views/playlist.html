@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juke Box</title>
+    <!-- Link to external CSS -->
+    <link href="../public/css/playlist.css" rel="stylesheet">
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <!-- Navbar -->
+<nav class="black">
+    <div class="nav-wrapper container">
+      <a href="#" class="brand-logo left">
+        <img src="../public/images/logofinal.png" alt="JukeBox Logo" style="height: 60px;">
+      </a>
+      <!-- Hamburger icon for mobile -->
+      <a href="#" data-target="mobile-menu" class="sidenav-trigger right">
+        <i class="material-icons white-text">menu</i>
+      </a>
+  
+      <!-- Desktop menu -->
+      <ul id="nav-mobile" class="right hide-on-large-and-down nav-big">
+        <li><a href="./home.html">HOME</a></li>
+        <li><a href="./songrecommendation.html">SONG RECOMMENDATION</a></li>
+        <li><a href="./playlist.html">PLAYLIST</a></li>
+        <li><a href="./about.html">ABOUT</a></li>
+        <li><a href="./landing.html" onclick="sessionStorage.clear()">LOG-OUT</a></li>
+        <li>
+          <a href="./profile.html" class="user left">
+            <img src="../public/images/user.jpeg" alt="User" style="height: 50px; border-radius: 50%;">
+          </a>
+        </li>
+      </ul>      
+    </div>
+  </nav>
+  
+  <!-- Mobile Menu -->
+  <ul class="sidenav" id="mobile-menu">
+    <li><a href="./home.html">HOME</a></li>
+    <li><a href="./songrecommendation.html">SONG RECOMMENDATION</a></li>
+    <li><a href="./playlist.html">PLAYLIST</a></li>
+    <li><a href="./about.html">ABOUT</a></li>
+    <li><a href="./landing.html" onclick="sessionStorage.clear()">LOG-OUT</a></li>
+    <li>
+      <a href="./profile.html">
+        <img src="../public/images/user.jpeg" alt="User" style="height: 40px; border-radius: 50%;">
+      </a>
+    </li>
+  </ul>
+  
+    <!-- === Carousel Section === -->
+    <section class="recommended-section">
+      <div class="container">
+          <!-- playlists section  -->
+          <h5 class="section-title white-text">Your Collections</h5>
+          <div id="carousel-trending" class="carousel-trending"></div>
+      </div>
+  </section>
+  
+
+  <!-- Playlist Modal -->
+<div id="playlist-modal" class="playlist-modal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content">
+    <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+    <div class="modal-search-wrapper">
+      <span class="input-icon"><i class="material-icons">search</i></span>
+      <input type="text" id="modal-search" placeholder="Search in playlist..." class="modal-search-input">
+    </div>
+    <div class="playlist-input-wrapper">
+      <input type="text" placeholder="Playlist Name" class="playlist-input" id="playlist-name">
+      <span class="input-icon"><i class="material-icons">edit</i></span>
+    </div>
+    <div class="playlist-actions">
+      <button class="export-btn">Export to Spotify</button>
+      <button class="delete-btn">Delete Playlist</button>
+    </div>
+    <div class="playlist-table-wrapper">
+      <table class="playlist-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Song Title</th>
+              <th>Album</th>
+              <th><i class="material-icons">schedule</i></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="playlist-songs-body">
+            <!-- Songs dynamically inserted -->
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+    <!-- Footer -->
+    <footer class="page-footer black">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <p class="grey-text text-lighten-4">© 2025 Juke-Box</p>
+                </div>
+                <div class="col l6 s12 right-align icons">
+                    <a href="#" class="btn black"><img src="../public/images/Facebook.png" height="30px" alt="Facebook"></a>
+                    <a href="#" class="btn black"><img src="../public/images/Twitter.png" height="30px" alt="Twitter"></a>
+                    <a href="#" class="btn black"><img src="../public/images/Instagram.png" height="30px" alt="Instagram"></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Materialize & jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="../public/js/sidenave.js"></script>
+    <script src="../public/js/playlist.js"></script>
+    <!-- Carousel Rendering Script -->
+</body>
+</html>

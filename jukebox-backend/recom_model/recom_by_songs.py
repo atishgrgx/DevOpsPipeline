@@ -57,7 +57,7 @@ class MusicRecommender:
                 return None, f"Song '{s}' not found."
         
         # Nearest Neighbors model
-        knn = NearestNeighbors(n_neighbors=10, metric='euclidean')  # Get 10 nearest neighbors
+        knn = NearestNeighbors(n_neighbors=50, metric='euclidean')  # Get 10 nearest neighbors
         knn.fit(self.scaled_features)  # Assuming scaled_features are available from earlier
         
         # Initialize a dictionary to hold the weighted recommendations
