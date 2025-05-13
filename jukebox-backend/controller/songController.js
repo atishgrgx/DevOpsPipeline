@@ -132,8 +132,19 @@ const deleteSongById = async (req, res) => {
     }
 };
 
+const getAllSongs = async (req, res) => {
+    try {
+        const songs = await Song.find({});
+        res.status(200).json(songs);
+    } catch (error) {
+        console.error('Error fetching all songs:', error);
+        res.status(500).json({ error: 'Failed to fetch songs from database.' });
+    }
+};
+
 module.exports = {
     saveSongsFromFile,
     saveSongsByName,
-    deleteSongById
+    deleteSongById,
+    getAllSongs
 };
