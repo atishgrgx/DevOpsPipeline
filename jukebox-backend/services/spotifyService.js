@@ -16,4 +16,10 @@ const getSongById = async (trackId) => {
   return result.body;
 };
 
-module.exports = { getSongById };
+const getSongByName = async (query) => {
+  await getAccessToken();
+  const data = await spotifyApi.searchTracks(query, { limit: 5 });
+  return data.body.tracks.items;
+};
+
+module.exports = { getSongById, getSongByName };
