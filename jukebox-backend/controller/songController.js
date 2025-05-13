@@ -5,7 +5,8 @@ const { getSongById } = require('../services/spotifyService.js');
 
 const saveSongsFromFile = async (req, res) => {
     try {
-        const filePath = path.join(__dirname, '../data/unique_song_ids_by_genre.txt');
+        // const filePath = path.join(__dirname, '../data/unique_song_ids_by_genre.txt');
+        const filePath = path.join(__dirname, '../data/track_ids.txt');
         const content = fs.readFileSync(filePath, 'utf-8');
         const songIds = content.split('\n').map(id => id.trim()).filter(Boolean);
 
