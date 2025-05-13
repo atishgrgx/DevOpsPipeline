@@ -142,6 +142,22 @@ const getAllSongs = async (req, res) => {
     }
 };
 
+const getSongByIdFromDb = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const song = await Song.findOne({ songId: id });
+
+        if (!song) {
+            return res.status(404).json({ message: 'Song not found in database.' });
+        }
+
+        res.status(200).json(song);
+    } catch (error) {
+        console.error('Error fetching song by ID:', error);
+        res.status(500).json({ error: 'Failed to fetch song from database.' });
+    }
+};
+
 module.exports = {
     saveSongsFromFile,
     saveSongsByName,
