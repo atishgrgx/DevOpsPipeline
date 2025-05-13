@@ -134,5 +134,6 @@ const deleteSongById = async (req, res) => {
 
 module.exports = {
     saveSongsFromFile,
-    saveSongsByName
+    saveSongsByName,
+    deleteSongById
 };
