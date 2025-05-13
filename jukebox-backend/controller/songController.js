@@ -142,7 +142,7 @@ const getAllSongs = async (req, res) => {
     }
 };
 
-const getSongById = async (req, res) => {
+const getSongByIdDB = async (req, res) => {
     try {
         const { id } = req.params;
         const song = await Song.findOne({ songId: id });
@@ -163,5 +163,5 @@ module.exports = {
     saveSongsByName,
     deleteSongById,
     getAllSongs,
-    getSongById
+    getSongByIdDB
 };
