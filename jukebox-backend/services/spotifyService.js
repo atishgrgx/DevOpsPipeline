@@ -17,6 +17,10 @@ const getSongById = async (trackId) => {
 };
 
 const getSongByName = async (query) => {
+  if (!query || query.trim() === "") {
+    console.error("Search query is empty.");
+    return;
+  }
   await getAccessToken();
   const data = await spotifyApi.searchTracks(query, { limit: 5 });
   return data.body.tracks.items;
