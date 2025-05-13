@@ -115,6 +115,23 @@ const saveSongsByName = async (req, res) => {
     }
 };
 
+const deleteSongById = async (req, res) => {
+    try {
+        const { songId } = req.params;
+
+        const deletedSong = await Song.findOneAndDelete({ songId });
+
+        if (!deletedSong) {
+            return res.status(404).json({ message: 'Song not found in database.' });
+        }
+
+        res.status(200).json({ message: 'Song deleted successfully.', deletedSong });
+    } catch (error) {
+        console.error('Error deleting song:', error);
+        res.status(500).json({ error: 'Failed to delete song from database.' });
+    }
+};
+
 module.exports = {
     saveSongsFromFile,
     saveSongsByName
