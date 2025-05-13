@@ -5,6 +5,6 @@ const { saveSongsFromFile, saveSongsByName, deleteSongById, getAllSongs } = requ
 router.get('/save-from-file', saveSongsFromFile);
 router.get('/search/:songName', saveSongsByName);
 router.delete('/:songId', deleteSongById);
-router.get('/songs', getAllSongs); 
+router.get('/', getAllSongs); 
 
 module.exports = router;
