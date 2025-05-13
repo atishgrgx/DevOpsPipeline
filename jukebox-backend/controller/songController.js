@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const Song = require('../model/song.js');
-const { getSongById } = require('../services/spotifyService.js');
+const { getSongById, getSongByName } = require('../services/spotifyService.js');
 
 const saveSongsFromFile = async (req, res) => {
     try {
@@ -55,6 +55,113 @@ const saveSongsFromFile = async (req, res) => {
     }
 };
 
+
+const saveSongsByName = async (req, res) => {
+    try {
+        const query = req.params.songName;
+        const songResults = await getSongByName(query);
+
+        if (!songResults || songResults.length === 0) {
+            return res.status(404).json({ message: 'No songs found for the given name.' });
+        }
+
+        const savedSongs = [];
+
+        for (const songData of songResults) {
+            // Avoid duplicates by checking songId
+            const exists = await Song.findOne({ songId: songData.id });
+            if (exists) {
+                console.log(`Song already exists: ${songData.name}`);
+                continue;
+            }
+
+            const newSong = new Song({
+                name: songData.name,
+                songId: songData.id,
+                artists: songData.artists.map(a => ({
+                    name: a.name,
+                    id: a.id,
+                    href: a.href,
+                })),
+                album: {
+                    name: songData.album.name,
+                    id: songData.album.id,
+                    href: songData.album.href,
+                    images: songData.album.images,
+                    release_date: songData.album.release_date,
+                },
+                duration_ms: songData.duration_ms,
+                popularity: songData.popularity,
+                explicit: songData.explicit,
+                preview_url: songData.preview_url,
+                external_urls: songData.external_urls,
+                type: songData.type,
+                release_date: new Date(songData.album.release_date),
+                external_id: songData.external_ids?.isrc || '',
+            });
+
+            await newSong.save();
+            savedSongs.push(newSong);
+            console.log(`Song added: ${songData.name}`);
+        }
+
+        res.status(201).json({
+            message: `${savedSongs.length} new songs saved for search query "${query}".`,
+            songs: savedSongs,
+        });
+    } catch (error) {
+        console.error('Error saving songs by name:', error);
+        res.status(500).json({ error: 'Failed to save songs by name' });
+    }
+};
+
+const deleteSongById = async (req, res) => {
+    try {
+        const { songId } = req.params;
+
+        const deletedSong = await Song.findOneAndDelete({ songId });
+
+        if (!deletedSong) {
+            return res.status(404).json({ message: 'Song not found in database.' });
+        }
+
+        res.status(200).json({ message: 'Song deleted successfully.', deletedSong });
+    } catch (error) {
+        console.error('Error deleting song:', error);
+        res.status(500).json({ error: 'Failed to delete song from database.' });
+    }
+};
+
+const getAllSongs = async (req, res) => {
+    try {
+        const songs = await Song.find({});
+        res.status(200).json(songs);
+    } catch (error) {
+        console.error('Error fetching all songs:', error);
+        res.status(500).json({ error: 'Failed to fetch songs from database.' });
+    }
+};
+
+const getSongByIdDB = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const song = await Song.findOne({ songId: id });
+
+        if (!song) {
+            return res.status(404).json({ message: 'Song not found in database.' });
+        }
+
+        res.status(200).json(song);
+    } catch (error) {
+        console.error('Error fetching song by ID:', error);
+        res.status(500).json({ error: 'Failed to fetch song from database.' });
+    }
+};
+
 module.exports = {
     saveSongsFromFile,
+    saveSongsByName,
+    deleteSongById,
+    getAllSongs,
+    getSongByIdDB
 };
