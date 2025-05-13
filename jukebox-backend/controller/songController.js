@@ -94,5 +94,5 @@ const saveSongsByName = async (req, res) => {
 
 module.exports = {
     saveSongsFromFile,
-    saveSongsByName,
+    saveSongsByName
 };

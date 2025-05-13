@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { saveSongsFromFile } = require('../controller/songController.js');
+const { saveSongsFromFile, saveSongsByName } = require('../controller/songController.js');
 
 router.get('/save-from-file', saveSongsFromFile);
+router.get('/search/:trackName', saveSongsByName);
 
 module.exports = router;
