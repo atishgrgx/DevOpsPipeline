@@ -20,7 +20,7 @@ export function handleLogin(event) {
         msgBox.style.color = "lightgreen";
 
         setTimeout(() => {
-          window.location.href = "../views/profile.html";
+          window.location.href = "../views/home.html";
         }, 1500);
       } else {
         msgBox.textContent = data.message || "Login failed.";
