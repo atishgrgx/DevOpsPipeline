@@ -1,4 +1,4 @@
-// ✅ Connect to backend with user email (for private messaging)
+// Connect to backend with user email (for private messaging)
 const socket = io("http://localhost:3000", {
     query: {
       email: sessionStorage.getItem("userEmail") || "anonymous@example.com"
@@ -65,7 +65,7 @@ const socket = io("http://localhost:3000", {
     privateMessages.innerHTML = ""; // Reset old messages (no history yet)
   };
   
-  // ✅ Send private message
+  // Send private message
   privateForm?.addEventListener("submit", (e) => {
     e.preventDefault();
     const msg = privateInput.value.trim();
@@ -79,20 +79,20 @@ const socket = io("http://localhost:3000", {
         sender: sessionStorage.getItem("userEmail")
       });
   
-      // ✅ Only display for sender
+      // Only display for sender
       appendPrivateMessage(fullMsg, true);
       privateInput.value = "";
     }
   });
   
-  // ✅ Receive private message
+  // Receive private message
   socket.on("privateMessage", ({ message, sender }) => {
     const myEmail = sessionStorage.getItem("userEmail");
     if (sender === myEmail) return; // skip if sent by self (already appended)
     appendPrivateMessage(message, false);
   });
   
-  // ✅ Append message helper
+  //  Append message helper
   function appendPrivateMessage(message, isSender = false) {
     const p = document.createElement("p");
     p.textContent = message;

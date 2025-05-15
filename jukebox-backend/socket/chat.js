@@ -7,7 +7,7 @@ module.exports = (io) => {
 
     if (email) {
       userSockets[email] = socket.id;
-      console.log(`✅ User connected: ${email}`);
+      console.log(`User connected: ${email}`);
     }
 
     // Group chat room join
@@ -24,21 +24,21 @@ module.exports = (io) => {
       io.to(room).emit('chatMessage', message);
     });
 
-    // ✅ Private message handling
+    // Private message handling
     socket.on('privateMessage', ({ to, message, sender }) => {
       const targetSocketId = userSockets[to];
       if (targetSocketId) {
         io.to(targetSocketId).emit('privateMessage', { message, sender });
-        console.log(`📤 Sent private message from ${sender} to ${to}: ${message}`);
+        console.log(`Sent private message from ${sender} to ${to}: ${message}`);
       } else {
-        console.warn(`❌ User ${to} not connected`);
+        console.warn(`User ${to} not connected`);
       }
     });
 
     socket.on('disconnect', () => {
       if (email && userSockets[email]) {
         delete userSockets[email];
-        console.log(`⛔ Disconnected: ${email}`);
+        console.log(`Disconnected: ${email}`);
       }
     });
   });
