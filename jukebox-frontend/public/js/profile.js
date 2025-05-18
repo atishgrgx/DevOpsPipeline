@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // ✅ Initialize Materialize components
+  // Initialize Materialize components
   const modals = document.querySelectorAll('.modal');
   const selects = document.querySelectorAll('select');
   const tabs = document.querySelectorAll('.tabs');
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   M.updateTextFields();
 
-  // ✅ Display user info from sessionStorage
+  // Display user info from sessionStorage
   const name = sessionStorage.getItem("userName") || "Guest";
   const email = sessionStorage.getItem("userEmail") || "Not available";
 
@@ -21,13 +21,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (emailEl) emailEl.textContent = email;
 });
 
-// ✅ Logout handler
+// Logout handler
 function handleLogout() {
   sessionStorage.clear();
   window.location.href = 'login.html';
 }
 
-// ✅ Save personal info from modal
+// Save personal info from modal
 function savePersonalInfo() {
   const dob = document.getElementById("dob")?.value;
   const age = document.getElementById("age")?.value;
@@ -52,7 +52,7 @@ function savePersonalInfo() {
   M.toast({ html: "Personal details saved", classes: "green" });
 }
 
-// ✅ Optional: if using <a id="logoutBtn">Logout</a>
+// Optional: if using <a id="logoutBtn">Logout</a>
 document.getElementById("logoutBtn")?.addEventListener("click", (e) => {
   e.preventDefault();
   handleLogout();

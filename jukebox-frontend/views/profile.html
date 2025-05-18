@@ -9,17 +9,27 @@
 </head>
 <body class="profile-page">
 
-  <!-- Navigation Bar -->
-  <nav class="teal">
-    <div class="nav-wrapper container nav-flex">
-      <div class="nav-logo-title">
-        <img src="../public/images/logo.png" alt="Logo" class="logo-img">
-        <span class="white-text brand-title">Juke Box</span>
-      </div>
-      <ul class="nav-links">
-        <li><a href="/profile">Profile</a></li>
-        <li><a href="#" onclick="handleLogout()">Logout</a></li>
-      </ul>
+  <!-- Navigation -->
+  <nav class="black">
+    <div class="nav-wrapper container">
+      <a href="#" class="brand-logo left">
+        <img src="../public/images/logofinal.png" alt="JukeBox Logo" style="height: 60px;">
+      </a>
+      <a href="#" data-target="mobile-menu" class="sidenav-trigger right">
+        <i class="material-icons white-text">menu</i>
+      </a>
+      <ul id="nav-mobile" class="right hide-on-large-and-down nav-big">
+        <li><a href="./home.html">HOME</a></li>
+        <li><a href="./songrecommendation.html">SONG RECOMMENDATION</a></li>
+        <li><a href="./playlist.html">PLAYLIST</a></li>
+        <li><a href="./about.html">ABOUT</a></li>
+        <li><a href="./landing.html" onclick="sessionStorage.clear()">LOG-OUT</a></li>
+        <li>
+          <a href="./profile.html" class="user left">
+            <img src="../public/images/user.jpeg" alt="User" style="height: 50px; border-radius: 50%;">
+          </a>
+        </li>
+      </ul>      
     </div>
   </nav>
 
@@ -36,8 +46,13 @@
               <i class="material-icons large teal-text">account_circle</i>
             </div>
             <p><strong>Email:</strong> <span id="userEmail">email@example.com</span></p>
-            <div class="center-align personal-info-wrapper">
-              <a class="btn modal-trigger teal" href="#personalModal">Personal Information</a>
+            <p><strong>DOB:</strong> <span id="dobDisplay">Not set</span></p>
+            <p><strong>Age:</strong> <span id="ageDisplay">Not set</span></p>
+            <p><strong>Gender:</strong> <span id="genderDisplay">Not set</span></p>
+            <div class="center-align personal-info-wrapper" style="margin-top: 20px;">
+              <a class="btn-floating btn-small modal-trigger teal" href="#personalModal" title="Edit Personal Info">
+                <i class="material-icons">edit</i>
+              </a>
             </div>
           </div>
         </div>
@@ -77,25 +92,17 @@
             <!-- Available Users Tab -->
             <div id="userChat" class="tab-content">
               <h5 class="center-align">Available Users</h5>
-            
-              <!-- Search Bar -->
               <div class="input-field">
                 <input type="text" id="userSearch" placeholder="Search user...">
               </div>
-            
-              <!-- User Dropdown -->
               <div class="input-field">
                 <select id="userDropdown" class="browser-default">
                   <option value="" disabled selected>Select a user</option>
                 </select>
               </div>
-            
-              <!-- Start Chat Button -->
               <div class="center-align" style="margin-top: 10px;">
                 <button class="btn teal" id="startPrivateChatBtn">Start Chat</button>
               </div>
-            
-              <!-- Private Chat Box -->
               <div id="privateChatBox" style="display: none; margin-top: 30px;">
                 <h6 id="privateChatTitle" class="center-align"></h6>
                 <div id="privateChatMessages" class="card" style="height: 200px; overflow-y: auto; padding: 10px;"></div>
@@ -115,8 +122,19 @@
   </main>
 
   <!-- Footer -->
-  <footer class="footer">
-    <p>© 2025 Juke Box Music Studio. All rights reserved.</p>
+  <footer class="page-footer black">
+    <div class="container">
+        <div class="row">
+            <div class="col l6 s12">
+                <p class="grey-text text-lighten-4">© 2025 Juke-Box</p>
+            </div>
+            <div class="col l6 s12 right-align icons">
+                <a href="#" class="btn black"><img src="../public/images/Facebook.png" height="30px" alt="Facebook"></a>
+                <a href="#" class="btn black"><img src="../public/images/Twitter.png" height="30px" alt="Twitter"></a>
+                <a href="#" class="btn black"><img src="../public/images/Instagram.png" height="30px" alt="Instagram"></a>
+            </div>
+        </div>
+    </div>
   </footer>
 
   <!-- Modal for Personal Info -->
@@ -129,7 +147,7 @@
       </div>
       <div class="input-field">
         <input type="number" id="age">
-        <label for="age">Age</label>
+        <label for="age" class="active">Age</label>
       </div>
       <div class="input-field">
         <select id="gender">
