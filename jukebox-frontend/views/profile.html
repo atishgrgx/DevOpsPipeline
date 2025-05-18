@@ -9,18 +9,15 @@
 </head>
 <body class="profile-page">
 
-
+  <!-- Navigation -->
   <nav class="black">
     <div class="nav-wrapper container">
       <a href="#" class="brand-logo left">
         <img src="../public/images/logofinal.png" alt="JukeBox Logo" style="height: 60px;">
       </a>
-    
       <a href="#" data-target="mobile-menu" class="sidenav-trigger right">
         <i class="material-icons white-text">menu</i>
       </a>
-  
-      <!-- Desktop menu -->
       <ul id="nav-mobile" class="right hide-on-large-and-down nav-big">
         <li><a href="./home.html">HOME</a></li>
         <li><a href="./songrecommendation.html">SONG RECOMMENDATION</a></li>
@@ -49,8 +46,13 @@
               <i class="material-icons large teal-text">account_circle</i>
             </div>
             <p><strong>Email:</strong> <span id="userEmail">email@example.com</span></p>
-            <div class="center-align personal-info-wrapper">
-              <a class="btn modal-trigger teal" href="#personalModal">Personal Information</a>
+            <p><strong>DOB:</strong> <span id="dobDisplay">Not set</span></p>
+            <p><strong>Age:</strong> <span id="ageDisplay">Not set</span></p>
+            <p><strong>Gender:</strong> <span id="genderDisplay">Not set</span></p>
+            <div class="center-align personal-info-wrapper" style="margin-top: 20px;">
+              <a class="btn-floating btn-small modal-trigger teal" href="#personalModal" title="Edit Personal Info">
+                <i class="material-icons">edit</i>
+              </a>
             </div>
           </div>
         </div>
@@ -133,7 +135,7 @@
             </div>
         </div>
     </div>
-</footer>
+  </footer>
 
   <!-- Modal for Personal Info -->
   <div id="personalModal" class="modal">
@@ -145,7 +147,7 @@
       </div>
       <div class="input-field">
         <input type="number" id="age">
-        <label for="age">Age</label>
+        <label for="age" class="active">Age</label>
       </div>
       <div class="input-field">
         <select id="gender">
