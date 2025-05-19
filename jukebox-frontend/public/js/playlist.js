@@ -1,19 +1,39 @@
 // public/js/home.js
 
-const playlist = [
-  { title: 'Old Phone', img: '../public/images/play 6.png' },
-  { title: 'Show Me Love', img: '../public/images/song 4.png' },
-  { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
-  { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
-  { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
-  { title: 'Egypt - Remix', img: '../public/images/play 6.png' },
-  { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
-  { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
-  { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
-  { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
-  { title: 'Egypt - Remix', img: '../public/images/play 6.png' }
-];
+// const playlist = [
+//   { title: 'Old Phone', img: '../public/images/play 6.png' },
+//   { title: 'Show Me Love', img: '../public/images/song 4.png' },
+//   { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
+//   { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
+//   { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
+//   { title: 'Egypt - Remix', img: '../public/images/play 6.png' },
+//   { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
+//   { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
+//   { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
+//   { title: 'Egypt - Remix', img: '../public/images/song 1.png' },
+//   { title: 'Egypt - Remix', img: '../public/images/play 6.png' }
+// ];
 
+let playlist = [];
+let playlistSongs = [];
+let allPlaylists = [];
+
+async function fetchPlaylists() {
+  try {
+    const response = await fetch('http://127.0.0.1:3000/api/playlists');
+    const data = await response.json();
+    playlist = data.map(pl => ({
+      title: pl.playlist_name,
+      img: pl.songs[0]?.image || 'jukebox-frontend/public/images/play 6.png'  // fallback image
+    }));
+    allPlaylists = data;
+    playlistSongs = data[0]?.songs || [];
+
+    renderCarousels();
+  } catch (error) {
+    console.error('Failed to fetch playlists:', error);
+  }
+}
 
 function createCard(item, type) {
   const wrapper = document.createElement('div');
@@ -40,8 +60,11 @@ function createCard(item, type) {
   button.textContent = 'Explore';
   button.classList.add('explore-button'); // Add this class for styling
   button.addEventListener('click', () => {
-    openPlaylistModal();
-  });
+  // Load matching playlist songs by title
+  const matched = allPlaylists.find(p => p.playlist_name === item.title);
+  playlistSongs = matched?.songs || [];
+  openPlaylistModal();
+});
   content.appendChild(button);
 
   card.appendChild(content);
@@ -77,53 +100,53 @@ document.getElementById('modal-close-btn').addEventListener('click', () => {
 });
 
 
-document.addEventListener('DOMContentLoaded', renderCarousels);
+document.addEventListener('DOMContentLoaded', fetchPlaylists);
 
-const playlistSongs = [
-  {
-    title: 'Adiye – From “Bachelor”',
-    artist: 'Dhibu Ninan Thomas',
-    album: 'Adiye (From “Bachelor”)',
-    duration: '4:32',
-    image: '../public/images/play 6.png'
-  },
-  {
-    title: 'Adiye – From “Bachelor”',
-    artist: 'Dhibu Ninan Thomas',
-    album: 'Adiye (From “Bachelor”)',
-    duration: '4:32',
-    image: '../public/images/song 1.png'
-  },
-  {
-    title: 'Adiye – From “Bachelor”',
-    artist: 'Dhibu Ninan Thomas',
-    album: 'Adiye (From “Bachelor”)',
-    duration: '4:32',
-    image: '../public/images/song 1.png'
-  },
-  {
-    title: 'Adiye – From “Bachelor”',
-    artist: 'Dhibu Ninan Thomas',
-    album: 'Adiye (From “Bachelor”)',
-    duration: '4:32',
-    image: '../public/images/song 1.png'
-  },
-  {
-    title: 'Adiye – From “Bachelor”',
-    artist: 'Dhibu Ninan Thomas',
-    album: 'Adiye (From “Bachelor”)',
-    duration: '4:32',
-    image: '../public/images/song 1.png'
-  },
-  {
-    title: 'Adiye – From “Bachelor”',
-    artist: 'Dhibu Ninan Thomas',
-    album: 'Adiye (From “Bachelor”)',
-    duration: '4:32',
-    image: '../public/images/song 1.png'
-  },
-  // Add more songs as needed...
-];
+// const playlistSongs = [
+//   {
+//     title: 'Adiye – From “Bachelor”',
+//     artist: 'Dhibu Ninan Thomas',
+//     album: 'Adiye (From “Bachelor”)',
+//     duration: '4:32',
+//     image: '../public/images/play 6.png'
+//   },
+//   {
+//     title: 'Adiye – From “Bachelor”',
+//     artist: 'Dhibu Ninan Thomas',
+//     album: 'Adiye (From “Bachelor”)',
+//     duration: '4:32',
+//     image: '../public/images/song 1.png'
+//   },
+//   {
+//     title: 'Adiye – From “Bachelor”',
+//     artist: 'Dhibu Ninan Thomas',
+//     album: 'Adiye (From “Bachelor”)',
+//     duration: '4:32',
+//     image: '../public/images/song 1.png'
+//   },
+//   {
+//     title: 'Adiye – From “Bachelor”',
+//     artist: 'Dhibu Ninan Thomas',
+//     album: 'Adiye (From “Bachelor”)',
+//     duration: '4:32',
+//     image: '../public/images/song 1.png'
+//   },
+//   {
+//     title: 'Adiye – From “Bachelor”',
+//     artist: 'Dhibu Ninan Thomas',
+//     album: 'Adiye (From “Bachelor”)',
+//     duration: '4:32',
+//     image: '../public/images/song 1.png'
+//   },
+//   {
+//     title: 'Adiye – From “Bachelor”',
+//     artist: 'Dhibu Ninan Thomas',
+//     album: 'Adiye (From “Bachelor”)',
+//     duration: '4:32',
+//     image: '../public/images/song 1.png'
+//   },
+//   // Add more songs as needed...
+// ];
 
 function renderPlaylistSongs() {
   const tbody = document.getElementById('playlist-songs-body');
