@@ -15,7 +15,7 @@ module.exports = (io) => {
 
     if (email) {
       userSockets[email] = socket.id;
-      console.log(`✅ User connected: ${email}`);
+      console.log(`User connected: ${email}`);
     }
 
     // ===== GROUP CHAT =====
@@ -55,16 +55,16 @@ module.exports = (io) => {
       // Send to recipient if connected
       if (targetSocketId) {
         io.to(targetSocketId).emit('privateMessage', { message, sender });
-        console.log(`📨 Private message from ${sender} to ${to}: ${message}`);
+        console.log(`Private message from ${sender} to ${to}: ${message}`);
       } else {
-        console.warn(`⚠️ User ${to} not connected`);
+        console.warn(`User ${to} not connected`);
       }
 
       // Save to S3
       await savePrivateChatToS3(sender, to, privateMessages[key]);
     });
 
-    // ✅ Load private chat history manually (when frontend requests)
+    // Load private chat history manually (when frontend requests)
     socket.on('loadPrivateChat', async ({ withUser }) => {
       const me = socket.handshake.query.email;
       const key = [me, withUser].sort().join('_');
@@ -83,7 +83,7 @@ module.exports = (io) => {
     socket.on('disconnect', () => {
       if (email && userSockets[email]) {
         delete userSockets[email];
-        console.log(`❌ Disconnected: ${email}`);
+        console.log(`Disconnected: ${email}`);
       }
     });
   });
