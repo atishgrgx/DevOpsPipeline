@@ -4,7 +4,7 @@ const { saveSongsFromFile, saveSongsByName, deleteSongById, getAllSongs, getSong
 
 router.get('/save-from-file', saveSongsFromFile);
 router.get('/search/:songName', saveSongsByName);
-router.delete('/:songId', deleteSongById);
+router.delete('/remove/:songId', deleteSongById);
 router.get('/', getAllSongs); 
 router.get('/:id', getSongByIdDB); 
 
