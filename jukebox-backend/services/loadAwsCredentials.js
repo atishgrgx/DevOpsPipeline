@@ -1,10 +1,10 @@
-require('dotenv').config({ path: __dirname + '/../.env' }); // Ensure .env loads
+require('dotenv').config({ path: __dirname + '/../.env' });
 const { decrypt } = require('./encryptor');
 const { MongoClient } = require('mongodb');
 
-const uri = 'mongodb://localhost:27017'; // Update if needed
+const uri = process.env.MONGO_URL; // ✅ Use your Atlas cluster URI
 const client = new MongoClient(uri);
-const dbName = 'jukeboxApp';
+const dbName = 'JUKEBOXDB'; // ✅ Your Atlas DB name
 
 async function loadAwsCredentials() {
   try {
@@ -12,7 +12,7 @@ async function loadAwsCredentials() {
     const db = client.db(dbName);
     const config = await db.collection('app_config').findOne({ _id: 'aws_keys' });
 
-    if (!config) throw new Error('AWS credentials not found in DB');
+    if (!config) throw new Error('AWS credentials not found in MongoDB');
 
     return {
       accessKeyId: decrypt(config.aws_access_key_id),
