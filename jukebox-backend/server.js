@@ -7,10 +7,10 @@ const cors = require('cors');
 const http = require('http');
 const socketIO = require('socket.io');
 
-const app = express(); // ✅ define app only once
+const app = express(); //define app only once
 const server = http.createServer(app);
 
-// ✅ Setup Socket.IO with CORS for frontend on 127.0.0.1:5500
+// Setup Socket.IO with CORS for frontend on 127.0.0.1:5500
 const io = socketIO(server, {
   cors: {
     origin: "*", // Or 'http://127.0.0.1:5500'
@@ -23,7 +23,6 @@ const PORT = process.env.PORT || 3000;
 const authRoutes = require('./routes/authRoutes');
 const songRoutes = require('./routes/songRoutes');
 const playlistRoutes = require('./routes/playlistRoutes');
-// ✅ Apply CORS BEFORE any routes
 const userListRoutes = require('./routes/userlistRoutes');
 // Apply Express CORS before routes
 app.use(cors());
@@ -43,10 +42,10 @@ mongoose.connect(process.env.MONGO_URL, {
   useUnifiedTopology: true,
 });
 mongoose.connection.on('connected', () => {
-  console.log('✅ Connected to MongoDB Atlas!');
+  console.log('Connected to MongoDB Atlas!');
 });
 mongoose.connection.on('error', (err) => {
-  console.error('❌ MongoDB connection error:', err);
+  console.error('MongoDB connection error:', err);
 });
 
 // REST Routes
