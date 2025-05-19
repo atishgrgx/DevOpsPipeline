@@ -22,8 +22,7 @@ const PORT = process.env.PORT || 3000;
 // Routes
 const authRoutes = require('./routes/authRoutes');
 const songRoutes = require('./routes/songRoutes');
-
-// Apply CORS BEFORE any routes
+const playlistRoutes = require('./routes/playlistRoutes');
 const userListRoutes = require('./routes/userlistRoutes');
 // Apply Express CORS before routes
 app.use(cors());
@@ -51,7 +50,8 @@ mongoose.connection.on('error', (err) => {
 
 // REST Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/songs', songRoutes); 
+app.use('/api/songs', songRoutes);
+app.use('/api/playlists', playlistRoutes); 
 
 // WebSocket logic (keep chat logic in a separate file)
 require('./socket/chat')(io);

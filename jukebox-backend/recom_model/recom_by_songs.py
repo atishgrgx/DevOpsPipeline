@@ -48,6 +48,26 @@ class MusicRecommender:
         top_recommendations = cluster_songs.sort_values('distance').head(5)
         print(top_recommendations)
         return top_recommendations[['track_name', 'track_id', 'artists', 'track_genre']].to_dict(orient='records'), None
+    
+    def get_cluster_means_and_closest(self, n_closest=10):
+        cluster_info = {}
+
+        for cluster_id in range(23):
+            cluster_indices = self.df[self.df['cluster'] == cluster_id].index
+            if len(cluster_indices) == 0:
+                continue
+
+            cluster_vectors = self.scaled_features[cluster_indices]
+            mean_vector = cluster_vectors.mean(axis=0)
+            distances = euclidean_distances(cluster_vectors, mean_vector.reshape(1, -1)).flatten()
+            sorted_indices = cluster_indices[distances.argsort()[:n_closest]]
+
+            cluster_info[cluster_id] = {
+                'mean': mean_vector.tolist(),
+                'closest_songs': self.df.loc[sorted_indices, ['track_name', 'track_id', 'artists', 'track_genre']].to_dict(orient='records')
+            }
+
+        return cluster_info
 
         # # Convert input songs to indices
         # indices = []
