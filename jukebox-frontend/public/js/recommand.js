@@ -46,9 +46,59 @@ songs.forEach((song, index) => {
 });
 
 function openPlaylistModal() {
-    document.getElementById('playlist-modal').style.display = 'flex';
-    renderPlaylistSongs(); // make sure this exists!
-  }
+  
+  const songs = ['Rain', 'Naina', 'Comedy'];
+
+  fetch('http://127.0.0.1:5000/api/recommend', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      songs: songs,
+      model_type: 'song'  // or 'playlist' if you want to test that
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Response:', data);
+    if (data.error) {
+      alert(data.error);
+      return;
+    }
+
+const trackIds = data.recommendations.map(r => r.track_id);
+
+      return fetch('http://127.0.0.1:5000/api/song_details', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ track_ids: trackIds })
+      });
+    })
+    .then(res => res.json())
+    .then(songDetails => {
+      playlistSongs.length = 0;
+      songDetails.forEach(song => {
+        playlistSongs.push({
+          title: song.title,
+          artist: song.artist,
+          album: song.album,
+          duration: song.duration || '3:30',
+          image: song.image || '../public/images/song 1.png'
+        });
+      });
+      
+    renderPlaylistSongs();
+    modal.style.display = 'flex';
+    setTimeout(() => {
+      modal.classList.add('show');
+    }, 10);
+  })
+  .catch(err => {
+    console.error('Error:', err);
+    alert('Failed to get recommendations.');
+  });
+}
 
   function closePlaylistModal() {
   document.getElementById('playlist-modal').style.display = 'none';
