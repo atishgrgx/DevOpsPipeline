@@ -1,12 +1,19 @@
 from flask import Flask, request, render_template
 from recom_by_songs import MusicRecommender
 from recom_by_playlist import PlaylistRecommender  # Different logic, same dataset
+from flask import jsonify
+from flask_cors import CORS
+from pymongo import MongoClient
 
 app = Flask(__name__)
-
+CORS(app)
 # Initialize recommenders with SAME dataset
 song_recommender = MusicRecommender('jukebox-backend/recom_model/filtered_data.csv')
 playlist_recommender = PlaylistRecommender('jukebox-backend/recom_model/filtered_data.csv')
+
+client = MongoClient("mongo_string")
+db = client['JUKEBOXDB']
+collection = db['songs']
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -28,6 +35,49 @@ def index():
 
     # For GET request
     return render_template('index.html')
+
+@app.route('/api/recommend', methods=['POST'])
+def api_recommend():
+    data = request.get_json()
+    songs = data.get('songs', [])
+    model_type = data.get('model_type', 'song')
+
+    if not songs:
+        return jsonify({'error': 'No songs provided'}), 400
+
+    if model_type == 'song':
+        recommendations, error = song_recommender.recommend(songs)
+    elif model_type == 'playlist':
+        recommendations, error = playlist_recommender.recommend(songs)
+    else:
+        return jsonify({'error': 'Invalid model type'}), 400
+
+    if error:
+        return jsonify({'error': error}), 500
+
+    return jsonify({'recommendations': recommendations}), 200
+
+@app.route('/api/song_details', methods=['POST'])
+def get_song_details():
+    data = request.get_json()
+    track_ids = data.get('track_ids', [])
+
+    if not track_ids:
+        return jsonify({'error': 'No track_ids provided'}), 400
+
+    # Query for those track_ids (songId in your doc)
+    songs = collection.find({'songId': {'$in': track_ids}})
+
+    results = []
+    for song in songs:
+        results.append({
+            'title': song.get('name', 'Unknown'),
+            'artist': ', '.join(artist['name'] for artist in song.get('artists', [])),
+            'album': song.get('album', {}).get('name', 'Unknown'),
+            'duration': f"{song['duration_ms'] // 60000}:{str((song['duration_ms'] % 60000) // 1000).zfill(2)}" if 'duration_ms' in song else '3:30',
+            'image': song.get('album', {}).get('images', [{}])[0].get('url', '')  # largest image
+        })
+    return jsonify(results)
 
 if __name__ == '__main__':
     app.run(debug=True)
