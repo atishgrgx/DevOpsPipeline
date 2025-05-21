@@ -18,6 +18,9 @@ const io = socketIO(server, {
   }
 });
 
+const socketManager = require('./socket');
+socketManager.init(io); // initialize socket access globally
+
 const PORT = process.env.PORT || 3000;
 // Routes
 const authRoutes = require('./routes/authRoutes');
@@ -31,6 +34,8 @@ app.use(cors());
 // Getting user list
 app.use('/api/users', userListRoutes);
 
+// getting top songs
+app.use('/api', songRoutes);
 
 // Middlewares
 app.use(express.json());
@@ -55,6 +60,7 @@ app.use('/api/songs', songRoutes);
 
 // WebSocket logic (keep chat logic in a separate file)
 require('./socket/chat')(io);
+require('./socket/collabPlaylist')(io);
 
 // Start HTTP server
 server.listen(PORT, () => {

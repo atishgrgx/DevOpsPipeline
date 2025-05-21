@@ -1,0 +1,122 @@
+/* Ensure the body takes full height */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-size: cover; /* Ensures the image covers the whole screen */
+    background-position: center; /* Centers the background image */
+    background-attachment: fixed;           
+    background: linear-gradient(180deg, var(--THEME-BLUE, #1A0648) 1%, #ffffff 103.18%, var(--THEME-PINK, #ED2F67) 110.49%);
+}
+
+main {
+    flex: 1 0 auto;
+}
+/* Sticky footer at the bottom */
+footer {
+    margin-top: auto;
+  }
+
+footer .icons a {
+    margin: 0 5px;
+  }
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Apply margin-left to the logo */
+.brand-logo {
+    margin-left: 100px; /* Adjust the value as needed */
+    position: relative;
+}
+
+.nav-big a {
+    font-size: 15px; /* or smaller if needed */
+    padding: 20 10px;
+    margin-top: 15px;
+
+}
+.nav-small a {
+    font-size: 10px; /* or smaller if needed */
+    padding: 20 10px;
+}
+
+.sidenav a {
+    font-size: 16px;
+    color: black !important;
+  }
+  
+  /* Adjust logo on smaller screens */
+  @media only screen and (max-width: 600px) {
+    .brand-logo {
+      margin-left: 0;
+    }
+  }
+  
+  @media only screen and (max-width: 1200px) {
+  .nav-big {
+    display: none !important;
+  }
+
+  .sidenav-trigger {
+    display: block !important;
+  }
+
+  .brand-logo {
+    margin-left: 10px;
+  }
+
+  .chat-icon {
+    right: 20px;
+    bottom: 20px;
+  }
+}
+
+/* Import elegant serif font */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+
+.explore-btn {
+    border-radius: 50px;
+    background-color: #ED2F67 !important;
+    color: white !important;
+    text-transform: none;
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    padding: 5px 20px;
+    box-shadow: none;
+}
+
+
+/* Responsive: shrink image on small screens */
+@media only screen and (max-width: 600px) {
+    .collection-img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .collection-title {
+        font-size: 13px;
+    }
+
+    .explore-btn {
+        font-size: 12px;
+        padding: 4px 15px;
+    }
+}
+
+  
+
+/* Responsive adjustments */
+@media only screen and (max-width: 992px) {
+    .collection-card .card-image img {
+        height: 150px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .collection-card .card-image img {
+        height: 120px;
+    }
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Playlist Room</title>
+  <link rel="stylesheet" href="../public/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body>
+
+  <div class="container">
+    <h4>Welcome, <span id="username"></span>!</h4>
+
+    <div class="input-field">
+      <select id="playlistSelect">
+        <option value="" disabled selected>Select a Playlist Room</option>
+        <!-- options populated by JS -->
+      </select>
+      <label>Join Playlist Room</label>
+    </div>
+
+    <div id="playlistDetails" style="display: none;">
+      <h5 id="playlistName" class="center-align"></h5>
+      <ul id="songList" class="collection"></ul>
+
+      <form id="addSongForm" class="section">
+        <div class="input-field">
+          <input type="text" id="songTitle" required>
+          <label for="songTitle">Song Title</label>
+        </div>
+        <div class="input-field">
+          <input type="text" id="songArtist" required>
+          <label for="songArtist">Artist</label>
+        </div>
+        <button class="btn waves-effect waves-light" type="submit">Add Song</button>
+      </form>
+    </div>
+
+    <button data-target="createPlaylistModal" class="btn modal-trigger">Create New Playlist</button>
+
+    <!-- Modal Structure -->
+    <div id="createPlaylistModal" class="modal">
+      <div class="modal-content">
+        <h4>Create New Playlist</h4>
+        <form id="createPlaylistForm">
+          <div class="input-field">
+            <input type="text" id="playlistNameInput" required>
+            <label for="playlistNameInput">Playlist Name</label>
+          </div>
+          <button class="btn" type="submit">Create</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="../public/js/playlistLiveRoom.js"></script>
+
+</body>
+</html>
