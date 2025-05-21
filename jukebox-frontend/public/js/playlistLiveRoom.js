@@ -1,4 +1,4 @@
-const socket = io('http://localhost:3000'); // adjust if deployed
+// const socket = io('http://localhost:3000'); // Enable when socket.io is ready
 
 document.addEventListener('DOMContentLoaded', async function () {
   const username = sessionStorage.getItem('userName') || 'Guest';
@@ -10,112 +10,101 @@ document.addEventListener('DOMContentLoaded', async function () {
     return;
   }
 
-  document.getElementById('username').textContent = username;
-
+  const usernameElem = document.getElementById('username');
   const playlistSelect = document.getElementById('playlistSelect');
-  const playlistDetails = document.getElementById('playlistDetails');
-  const playlistNameHeading = document.getElementById('playlistName');
-  const songList = document.getElementById('songList');
-  let currentPlaylistId = null;
+  const playlistListContainer = document.getElementById('playlistList');
 
-  // Materialize setup
-  const selects = document.querySelectorAll('select');
-  M.FormSelect.init(selects);
-  const modals = document.querySelectorAll('.modal');
-  M.Modal.init(modals);
+  if (usernameElem) {
+    usernameElem.textContent = username;
+  }
 
-  // Fetch playlists from backend
+console.log(usernameElem.textContent)
+
+  // Initialize Materialize components
+  M.FormSelect.init(document.querySelectorAll('select'));
+  M.Modal.init(document.querySelectorAll('.modal'));
+
+  // Fetch playlists and render them
   async function fetchPlaylists() {
-    const res = await fetch('http://localhost:3000/api/playlist');
-    const playlists = await res.json();
-    playlists.forEach(p => {
-      const option = document.createElement('option');
-      option.value = p._id;
-      option.textContent = p.name;
-      playlistSelect.appendChild(option);
-    });
-    M.FormSelect.init(playlistSelect); // Re-init after adding
-  }
+    try {
+      const res = await fetch('http://localhost:3000/api/playlist/all');
+      const playlists = await res.json();
 
-  // Join a playlist room
-  playlistSelect.addEventListener('change', async () => {
-    const playlistId = playlistSelect.value;
-    if (!playlistId) return;
+      if (playlistSelect) {
+        playlistSelect.innerHTML = '<option disabled selected>Select a Playlist Room</option>';
+      }
+      if (playlistListContainer) {
+        playlistListContainer.innerHTML = '';
+      }
 
-    currentPlaylistId = playlistId;
-    socket.emit('joinRoom', playlistId);
+      playlists.forEach(p => {
+        // Dropdown option
+        if (playlistSelect) {
+          const option = document.createElement('option');
+          option.value = p._id;
+          option.textContent = p.name;
+          playlistSelect.appendChild(option);
+        }
 
-    // Get playlist data
-    const res = await fetch(`http://localhost:3000/api/playlist/${playlistId}`);
-    const data = await res.json();
+        console.log(p)
+        // Playlist card
+        const col = document.createElement('div');
+        col.className = 'col s12 m6 l4';
+        col.innerHTML = `
+          <div class="card black">
+            <div class="card-content white-text">
+              <span class="card-title">${p.name}</span>
+              <p>Created By: ${p.createdBy.username}</p>
+            </div>
+            <div class="card-action">
+              <a href="#" class="join-playlist-btn pink-text" data-id="${p._id}">Join</a>
+            </div>
+          </div>
+        `;
+        playlistListContainer.appendChild(col);
+      });
 
-    playlistNameHeading.textContent = data.name;
-    renderSongs(data.songs || []);
-    playlistDetails.style.display = 'block';
-  });
-
-  // Render song list
-  function renderSongs(songs) {
-    songList.innerHTML = '';
-    songs.forEach(song => {
-      const li = document.createElement('li');
-      li.className = 'collection-item';
-      li.innerHTML = `<strong>${song.title}</strong> by ${song.artist}`;
-      songList.appendChild(li);
-    });
-  }
-
-  // Add song form submit
-  document.getElementById('addSongForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    if (!currentPlaylistId) return;
-
-    const title = document.getElementById('songTitle').value.trim();
-    const artist = document.getElementById('songArtist').value.trim();
-    if (!title || !artist) return;
-
-    socket.emit('addSong', {
-      playlistId: currentPlaylistId,
-      song: { title, artist, addedBy: email }
-    });
-
-    document.getElementById('songTitle').value = '';
-    document.getElementById('songArtist').value = '';
-  });
-
-  // Real-time song added
-  socket.on('songAdded', ({ song, playlistId }) => {
-    if (playlistId !== currentPlaylistId) return;
-    const li = document.createElement('li');
-    li.className = 'collection-item';
-    li.innerHTML = `<strong>${song.title}</strong> by ${song.artist}`;
-    songList.appendChild(li);
-  });
-
-  // Create playlist form
-  document.getElementById('createPlaylistForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const playlistName = document.getElementById('playlistNameInput').value.trim();
-    if (!playlistName) return;
-
-    const res = await fetch('http://localhost:3000/api/playlist/create', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: playlistName, createdBy: email })
-    });
-
-    const data = await res.json();
-    if (res.ok) {
-      alert('Playlist created!');
-      playlistSelect.innerHTML = '<option disabled selected>Select a Playlist Room</option>';
-      fetchPlaylists();
-      M.Modal.getInstance(document.getElementById('createPlaylistModal')).close();
-      document.getElementById('playlistNameInput').value = '';
-    } else {
-      alert(data.message || 'Failed to create playlist');
+      M.FormSelect.init(playlistSelect); // Re-initialize
+    } catch (err) {
+      console.error('Failed to fetch playlists:', err);
     }
-  });
+  }
+
+  // Handle create playlist submission
+  async function handleCreatePlaylist() {
+    const form = document.getElementById('createPlaylistForm');
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const input = document.getElementById('playlistNameInput');
+      const name = input.value.trim();
+
+      if (!name) return;
+
+      try {
+        const res = await fetch('http://localhost:3000/api/playlist/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, email,name }),
+        });
+
+        if (res.ok) {
+          input.value = '';
+          M.Modal.getInstance(document.getElementById('createPlaylistModal')).close();
+          await fetchPlaylists(); // Refresh playlist list
+        } else {
+          const errData = await res.json();
+          alert(`Error: ${errData.message || 'Failed to create playlist'}`);
+        }
+      } catch (err) {
+        console.error('Error creating playlist:', err);
+      }
+    });
+  }
 
   // Logout function
   window.logout = () => {
@@ -123,5 +112,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     window.location.href = '../views/login.html';
   };
 
-  fetchPlaylists();
+  // Initial calls
+  await fetchPlaylists();
+  await handleCreatePlaylist();
 });

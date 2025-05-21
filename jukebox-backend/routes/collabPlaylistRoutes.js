@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/collabPlaylistController');
+const {getPlaylists,createPlaylist,addSong,removeSong,savePlaylistToUser,test} = require('../controller/collabPlaylistController');
 
-router.get('/', controller.getPlaylists);
-router.post('/create', controller.createPlaylist);
-router.post('/:playlistId/add-song', controller.addSong);
-router.delete('/:playlistId/remove-song', controller.removeSong);
-router.post('/:playlistId/save', controller.savePlaylistToUser);
+router.get('/all',getPlaylists)
+router.post('/create', createPlaylist);
+router.post('/:playlistId/add-song', addSong);
+router.delete('/:playlistId/remove-song', removeSong);
+router.post('/:playlistId/save', savePlaylistToUser);
 
 module.exports = router;

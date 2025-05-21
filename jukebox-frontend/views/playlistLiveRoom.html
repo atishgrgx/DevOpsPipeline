@@ -1,61 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Live Playlist Room</title>
-  <link rel="stylesheet" href="../public/css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Playlist</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../public/css/liveRoom.css" />
 </head>
+
 <body>
-
-  <div class="container">
-    <h4>Welcome, <span id="username"></span>!</h4>
-
-    <div class="input-field">
-      <select id="playlistSelect">
-        <option value="" disabled selected>Select a Playlist Room</option>
-        <!-- options populated by JS -->
-      </select>
-      <label>Join Playlist Room</label>
+  <!-- Navbar -->
+  <nav class="black">
+    <div class="nav-wrapper container">
+      <a href="#" class="brand-logo left">
+        <img src="../public/images/logofinal.png" alt="JukeBox Logo" style="height: 60px;">
+      </a>
+      <a href="#" data-target="mobile-menu" class="sidenav-trigger right">
+        <i class="material-icons white-text">menu</i>
+      </a>
+      <ul id="nav-mobile" class="right hide-on-large-and-down nav-big">
+        <li><a href="./home.html">HOME</a></li>
+        <li><a href="./songrecommendation.html">SONG RECOMMENDATION</a></li>
+        <li><a href="./playlist.html">PLAYLIST</a></li>
+        <li><a href="./about.html">ABOUT</a></li>
+        <li><a href="./landing.html" onclick="sessionStorage.clear()">LOG-OUT</a></li>
+        <li>
+          <a href="./profile.html" class="user left">
+            <img src="../public/images/user.jpeg" alt="User" style="height: 50px; border-radius: 50%;">
+          </a>
+        </li>
+      </ul>
     </div>
+  </nav>
 
-    <div id="playlistDetails" style="display: none;">
-      <h5 id="playlistName" class="center-align"></h5>
-      <ul id="songList" class="collection"></ul>
+  <!-- Mobile Menu -->
+  <ul class="sidenav" id="mobile-menu">
+    <li><a href="./home.html">HOME</a></li>
+    <li><a href="./songrecommendation.html">SONG RECOMMENDATION</a></li>
+    <li><a href="./playlist.html">PLAYLIST</a></li>
+    <li><a href="./about.html">ABOUT</a></li>
+    <li><a href="./playlistLiveRoom.html">Live Playlist</a></li>
+    <li><a href="./landing.html" onclick="sessionStorage.clear()">LOG-OUT</a></li>
+    <li>
+      <a href="./profile.html">
+        <img src="../public/images/user.jpeg" alt="User" style="height: 40px; border-radius: 50%;">
+      </a>
+    </li>
+  </ul>
 
-      <form id="addSongForm" class="section">
-        <div class="input-field">
-          <input type="text" id="songTitle" required>
-          <label for="songTitle">Song Title</label>
-        </div>
-        <div class="input-field">
-          <input type="text" id="songArtist" required>
-          <label for="songArtist">Artist</label>
-        </div>
-        <button class="btn waves-effect waves-light" type="submit">Add Song</button>
-      </form>
-    </div>
+  <!-- Welcome -->
+  <div class="section center-align white-text welcome-section">
+    <h4>🎵 Welcome, <span id="username">Guest</span>!</h4>
+    <p class="flow-text">You're now part of the Live Playlist experience.</p>
+  </div>
 
-    <button data-target="createPlaylistModal" class="btn modal-trigger">Create New Playlist</button>
-
-    <!-- Modal Structure -->
-    <div id="createPlaylistModal" class="modal">
-      <div class="modal-content">
-        <h4>Create New Playlist</h4>
-        <form id="createPlaylistForm">
-          <div class="input-field">
-            <input type="text" id="playlistNameInput" required>
-            <label for="playlistNameInput">Playlist Name</label>
-          </div>
-          <button class="btn" type="submit">Create</button>
-        </form>
-      </div>
+  <!-- Playlist Cards -->
+  <div class="section available-playlists">
+    <h5 class="white-text center-align">Available Playlists</h5>
+    <div class="container">
+      <div class="row" id="playlistList"></div>
     </div>
   </div>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  <script src="../public/js/playlistLiveRoom.js"></script>
 
+
+  <!-- Create Playlist Modal -->
+  <div class="center-align" style="margin: 20px;">
+    <a class="btn pink modal-trigger" href="#createPlaylistModal">
+      <i class="material-icons left">add</i>Create Playlist
+    </a>
+  </div>
+  <div id="createPlaylistModal" class="modal">
+    <div class="modal-content">
+      <h4>Create New Playlist</h4>
+      <form id="createPlaylistForm">
+        <div class="input-field">
+          <input id="playlistNameInput" type="text" required />
+          <label for="playlistNameInput">Playlist Name</label>
+        </div>
+        <button class="btn waves-effect waves-light" type="submit">Create</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="page-footer black">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <p class="grey-text text-lighten-4">© 2025 Juke-Box</p>
+        </div>
+        <div class="col l6 s12 right-align icons">
+          <a href="#" class="btn black"><img src="../public/images/Facebook.png" height="30px" alt="Facebook"></a>
+          <a href="#" class="btn black"><img src="../public/images/Twitter.png" height="30px" alt="Twitter"></a>
+          <a href="#" class="btn black"><img src="../public/images/Instagram.png" height="30px" alt="Instagram"></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <!-- <script src="/socket.io/socket.io.js"></script> -->
+  <script src="../public/js/sidenave.js"></script>
+  <script src="../public/js/playlistLiveRoom.js"></script>
 </body>
+
 </html>

@@ -1,18 +1,29 @@
-/* Ensure the body takes full height */
 body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-size: cover; /* Ensures the image covers the whole screen */
-    background-position: center; /* Centers the background image */
-    background-attachment: fixed;           
-    background: linear-gradient(180deg, var(--THEME-BLUE, #1A0648) 1%, #ffffff 103.18%, var(--THEME-PINK, #ED2F67) 110.49%);
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(
+    165deg,
+    var(--THEME-BLUE, #1A0648) 29.89%,
+    #831B58 103.18%,
+    var(--THEME-PINK, #ED2F67) 110.49%
+  );
+  min-height: 100vh;
+  color: white;
 }
 
-main {
-    flex: 1 0 auto;
+.welcome-section {
+  padding: 3rem 2rem 2rem 2rem;
 }
-/* Sticky footer at the bottom */
+
+.available-playlists {
+  padding: 2rem 1rem;
+}
+
+.card h6 {
+  margin: 0;
+}
+
 footer {
     margin-top: auto;
   }
@@ -72,51 +83,4 @@ footer .icons a {
     right: 20px;
     bottom: 20px;
   }
-}
-
-/* Import elegant serif font */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
-
-.explore-btn {
-    border-radius: 50px;
-    background-color: #ED2F67 !important;
-    color: white !important;
-    text-transform: none;
-    font-family: 'Playfair Display', serif;
-    font-size: 13px;
-    padding: 5px 20px;
-    box-shadow: none;
-}
-
-
-/* Responsive: shrink image on small screens */
-@media only screen and (max-width: 600px) {
-    .collection-img {
-        width: 80px;
-        height: 80px;
-    }
-
-    .collection-title {
-        font-size: 13px;
-    }
-
-    .explore-btn {
-        font-size: 12px;
-        padding: 4px 15px;
-    }
-}
-
-  
-
-/* Responsive adjustments */
-@media only screen and (max-width: 992px) {
-    .collection-card .card-image img {
-        height: 150px;
-    }
-}
-
-@media only screen and (max-width: 600px) {
-    .collection-card .card-image img {
-        height: 120px;
-    }
 }

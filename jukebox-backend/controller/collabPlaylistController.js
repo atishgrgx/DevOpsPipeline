@@ -1,12 +1,15 @@
-const Playlist = require('../models/CollaborativePlaylist');
-const UserPlaylist = require('../models/userPlaylist.model');
+const Playlist = require('../model/collaborativePlaylist');
+const UserPlaylist = require('../model/playlist');
 const io = require('../socket');
+const Song = require('../model/song');
+
+
 
 exports.getPlaylists = async (req, res) => {
+  console.log('✅ Test API hit');
   const playlists = await Playlist.find().sort({ createdAt: -1 });
   res.json(playlists);
 };
-
 exports.createPlaylist = async (req, res) => {
   const { name, imageUrl, userId, username } = req.body;
 
@@ -25,29 +28,46 @@ exports.createPlaylist = async (req, res) => {
   res.status(201).json({ message: 'Playlist created', playlist });
 };
 
+// Need to check with varni to check song schema
 exports.addSong = async (req, res) => {
   const { playlistId } = req.params;
-  const { songId, title, artist, imageUrl, userId, username } = req.body;
+  const { songId, userId, username } = req.body;
 
+  // Find the playlist
   const playlist = await Playlist.findById(playlistId);
   if (!playlist) return res.status(404).json({ message: 'Playlist not found' });
 
+  // Fetch song from Song collection
+  const song = await Song.findById(songId);
+  if (!song) return res.status(404).json({ message: 'Song not found in database.' });
+  console.log(song)
+
+  //Check song is already added
+  const songAlreadyExists = playlist.songs.some(s => String(s.songId) === String(song._id));
+  if (songAlreadyExists) {
+    return res.status(400).json({ message: 'Song already added.' });
+  }
+
+  // Push song data from DB, not from client
   playlist.songs.push({
-    songId,
-    title,
-    artist,
-    imageUrl,
+    track_id: song._id,
+    title: song.name,
+    artist: song.artists.map(artist => artist.name).join(', '),
+    imageUrl: song.album.images?.[0]?.url,
     addedBy: { userId, username },
     addedAt: new Date()
   });
 
   await playlist.save();
 
-  // Emit event to specific playlist room only
-  io.getIO().to(`playlist-${playlistId}`).emit('songAdded', { playlistId, song: playlist.songs.at(-1) });
+  io.getIO().to(`playlist-${playlistId}`).emit('songAdded', {
+    playlistId,
+    song: playlist.songs.at(-1)
+  });
 
   res.json({ message: 'Song added', playlist });
 };
+
 
 exports.removeSong = async (req, res) => {
   const { playlistId } = req.params;
@@ -58,6 +78,8 @@ exports.removeSong = async (req, res) => {
 
   if (String(playlist.createdBy.userId) !== userId)
     return res.status(403).json({ message: 'Only the creator can remove songs' });
+  if (String(playlist.songs.songId) !== songId)
+    return res.status(403).json({ message: 'song not found' });
 
   playlist.songs = playlist.songs.filter(song => song.songId !== songId);
   await playlist.save();
@@ -68,6 +90,7 @@ exports.removeSong = async (req, res) => {
   res.json({ message: 'Song removed', playlist });
 };
 
+// Need to check with varni bcz playlist model is not exsit
 exports.savePlaylistToUser = async (req, res) => {
   const { playlistId } = req.params;
   const { userId } = req.body;
@@ -77,16 +100,18 @@ exports.savePlaylistToUser = async (req, res) => {
 
   const userPlaylist = new UserPlaylist({
     userId,
-    name: playlist.name,
+    playlist_name: playlist.playlist_name || playlist.name || 'Untitled Playlist',
     songs: playlist.songs.map(song => ({
-      spotifyId: song.songId,
-      title: song.title,
-      artist: song.artist,
-      imageUrl: song.imageUrl,
-      addedBy: song.addedBy,
+      track_id: song.track_id || song.songId || '', // fallback if needed
+      title: song.title || '',
+      artist: song.artist || '',
+      album: song.album || '',
+      duration: song.duration || 0,
+      image: song.image || '',
       timestamp: new Date()
     }))
   });
+
 
   await userPlaylist.save();
 
