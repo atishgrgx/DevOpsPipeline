@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user'
   },
+  blocked: {
+    type: Boolean,
+    default: false  
+  },
   spotify: {
     id: String,
     displayName: String,
