@@ -16,7 +16,7 @@ const artists = [
 
 async function fetchTopSongs() {
     try {
-        const res = await fetch('http://localhost:3000/api/top-songs');
+        const res = await fetch('http://localhost:3000/api/songs/top-songs');
         const data = await res.json();
 
         if (!Array.isArray(data)) {

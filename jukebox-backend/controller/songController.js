@@ -174,6 +174,23 @@ const getTopSongs = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch top songs from database.' });
     }
 };
+const searchSongs = async (req, res) => {
+    try {
+        const query = req.query.q || '';
+        if (!query) return res.status(400).json({ message: 'Search query is required.' });
+
+        const songs = await Song.find({ name: new RegExp(query, 'i') }).limit(10);
+
+        if (songs.length === 0) {
+            return res.status(404).json({ message: 'No matching songs found.' });
+        }
+
+        res.status(200).json(songs);
+    } catch (error) {
+        console.error('Error searching songs:', error);
+        res.status(500).json({ error: 'Failed to search songs in database.' });
+    }
+};
 
 
 module.exports = {
@@ -182,5 +199,6 @@ module.exports = {
     deleteSongById,
     getAllSongs,
     getSongByIdDB,
-    getTopSongs
+    getTopSongs,
+    searchSongs
 };

@@ -185,50 +185,60 @@ document.addEventListener('DOMContentLoaded', async function () {
     window.location.href = '../views/login.html';
   };
 
-  async function serach() {
-    const songSearchInput = document.getElementById('songSearchInput');
-    const songSuggestions = document.getElementById('songSuggestions');
-    console.log("1111")
-    console.log("🎧 Setting up song search listener", songSearchInput, songSuggestions);
-    if (songSearchInput && songSuggestions) {
-  console.log("🎧 Setting up song search listener");
-
-  songSearchInput.addEventListener('input', async () => {
-    const query = songSearchInput.value.trim();
-
-    songSuggestions.innerHTML = '';
-    if (!query) return;
-
-    try {
-      const res = await fetch(`http://localhost:3000/api/songs/top-songs`);
-      console.log("🎤 Fetched top songs"); // Fixed typo here
-      const allSongs = await res.json();
-      console.log(allSongs);
-
-      const filtered = allSongs.filter(song =>
-        song.title.toLowerCase().includes(query.toLowerCase())
-      );
-
-      filtered.slice(0, 5).forEach(song => {
-        const li = document.createElement('li');
-        li.classList.add('collection-item');
-        li.style.cursor = 'pointer';
-        li.textContent = song.title;
-        li.addEventListener('click', () => {
-          songSearchInput.value = song.title;
-          songSuggestions.innerHTML = '';
-        });
-        songSuggestions.appendChild(li);
-      });
-    } catch (err) {
-      console.error('Error fetching songs:', err);
-    }
-  });
-}
-
-  }
 
   await fetchPlaylists();
   await handleCreatePlaylist();
-  await serach();
+
 });
+
+const input = document.getElementById('searchInput');
+  const suggestionsList = document.getElementById('suggestions');
+
+  input.addEventListener('input', async () => {
+    const query = input.value.trim();
+    if (!query) {
+      suggestionsList.style.display = 'none';
+      suggestionsList.innerHTML = '';
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/songs/search-db?q=${encodeURIComponent(query)}`);
+      const songs = await res.json();
+
+      suggestionsList.innerHTML = '';
+      if (!Array.isArray(songs)) {
+        suggestionsList.style.display = 'none';
+        return;
+      }
+
+      songs.forEach(song => {
+        const li = document.createElement('li');
+        li.textContent = song.name + ' – ' + (song.artists[0]?.name || 'Unknown Artist');
+        li.style.padding = '8px';
+        li.style.cursor = 'pointer';
+
+        li.addEventListener('click', () => {
+          input.value = song.name;
+          suggestionsList.style.display = 'none';
+          // Optional: redirect to song detail or display info
+          console.log('Selected song:', song);
+        });
+
+        suggestionsList.appendChild(li);
+      });
+
+      suggestionsList.style.display = songs.length > 0 ? 'block' : 'none';
+    } catch (err) {
+      console.error('Search error:', err);
+      suggestionsList.innerHTML = '';
+      suggestionsList.style.display = 'none';
+    }
+  });
+
+  // Hide dropdown when clicking outside
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#searchInput')) {
+      suggestionsList.style.display = 'none';
+    }
+  });
