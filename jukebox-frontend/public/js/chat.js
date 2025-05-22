@@ -1,8 +1,14 @@
-// ✅ Connect to backend with user email (for private messaging)
+// Connect to backend with user email (for private messaging)
 const socket = io("http://localhost:3000", {
   query: {
     email: sessionStorage.getItem("userEmail") || "anonymous@example.com"
   }
+});
+
+socket.on("forcedLogout", (msg) => {
+  alert(msg || "You have been logged out by the admin.");
+  sessionStorage.clear();
+  window.location.href = "login.html";
 });
 
 /* ---------------- GROUP CHAT LOGIC ---------------- */
@@ -24,7 +30,7 @@ form?.addEventListener("submit", (e) => {
   e.preventDefault();
   const msg = input.value.trim();
   if (msg && selectedRoom) {
-    const username = sessionStorage.getItem("userName") || "Guest";
+    const username = sessionStorage.getItem("userName");
     socket.emit("chatMessage", {
       room: selectedRoom,
       message: `${username}: ${msg}`,
@@ -84,7 +90,7 @@ privateForm?.addEventListener("submit", (e) => {
   e.preventDefault();
   const msg = privateInput.value.trim();
   if (msg && privateTargetEmail) {
-    const username = sessionStorage.getItem("userName") || "Guest";
+    const username = sessionStorage.getItem("userName");
     const fullMsg = `${username} (private): ${msg}`;
 
     socket.emit("privateMessage", {

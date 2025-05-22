@@ -1,4 +1,5 @@
 const User = require('../model/user');
+const DeletedUser = require('../model/deletedUser');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -13,6 +14,11 @@ const register = async (req, res) => {
 
   try {
     // Check if user already exists
+    const deleted = await DeletedUser.findOne({ email });
+    if (deleted) {
+      return res.status(403).json({ message: 'This email was previously deleted and cannot be reused.' });
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
@@ -34,41 +40,43 @@ const register = async (req, res) => {
 
 
 const login = async (req, res) => {
-  // Extract login credentials from request body
   const { email, password } = req.body;
 
-  // Validate input
   if (!email || !password) {
     return res.status(400).json({ message: 'Email and password are required' });
   }
 
   try {
-    // Find user by email
     const user = await User.findOne({ email });
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Compare passwords
+    if (user.blocked) {
+      return res.status(403).json({ message: 'Your account has been blocked. Please contact support.' });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Create JWT token
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
 
-
-    // Send response with token and user info
     res.status(200).json({
       token,
       user: {
         username: user.username,
         email: user.email,
-        role: user.role // helpful for frontend
+        role: user.role
       }
     });
-    
+
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ message: 'Something went wrong', error: err.message });

@@ -1,15 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Song Management</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="../public/css/admin.css">
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 </head>
 <body>
-
+  <div class="container">
+    <h4>Admin Dashboard</h4>
+    <table class="striped highlight responsive-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Current Status</th>
+          <th>Change Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="userTableBody">
+        <!-- Populated by admin.js -->
+      </tbody>
+    </table>
+  </div>
+  <div class="card-panel">
+    <h5>Manage Songs</h5>
+    <div class="row">
+      <div class="input-field col s6">
+        <input id="songTitle" type="text" class="validate">
+        <label for="songTitle">Song Title</label>
+      </div>
+      <div class="input-field col s6">
+        <input id="artist" type="text" class="validate">
+        <label for="artist">Artist</label>
+      </div>
+    </div>
+    <button class="btn green" onclick="addSong()">Add Song</button>
+    <button class="btn red" onclick="removeSong()">Remove Song</button>
+  </div>
+  
     <nav class="black">
         <div class="nav-wrapper container">
             <a href="#" class="brand-logo">Admin Dashboard</a>
@@ -74,5 +103,7 @@
             $('.modal').modal();
         });
     </script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+   <script src="../public/js/admin.js"></script>
 </body>
 </html>

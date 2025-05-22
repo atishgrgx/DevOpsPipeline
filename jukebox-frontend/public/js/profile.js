@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   M.updateTextFields();
 
   // Display user info from sessionStorage
-  const name = sessionStorage.getItem("userName") || "Guest";
+  const name = sessionStorage.getItem("userName");
   const email = sessionStorage.getItem("userEmail") || "Not available";
 
   const nameEl = document.getElementById("userNameDisplay");
