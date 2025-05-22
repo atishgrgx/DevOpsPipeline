@@ -1,6 +1,36 @@
-// const socket = io('http://localhost:3000'); // Enable when socket.io is ready
+console.log("🎬 playlistLiveRoom.js is running");
+const socket = io("http://localhost:3000"); // Connect to backend server
+
+socket.on("connect", () => {
+  console.log("🔌 Connected to Socket.IO server:", socket.id);
+});
+
+socket.on("playlistCreated", (playlist) => {
+  console.log("🆕 New playlist created via socket:", playlist);
+
+  const playlistListContainer = document.getElementById('playlistList');
+
+  if (playlistListContainer) {
+    const col = document.createElement('div');
+    col.className = 'col s12 m6 l4';
+    col.innerHTML = `
+      <div class="card black">
+        <div class="card-content white-text">
+          <span class="card-title">${playlist.name}</span>
+          <p>Created By: ${playlist.createdBy.username}</p>
+        </div>
+        <div class="card-action">
+          <a href="#" class="join-playlist-btn pink-text" data-id="${playlist._id}">Join</a>
+        </div>
+      </div>
+    `;
+    playlistListContainer.appendChild(col);
+  }
+});
+
 
 document.addEventListener('DOMContentLoaded', async function () {
+
   const username = sessionStorage.getItem('userName') || 'Guest';
   const email = sessionStorage.getItem('userEmail');
 
@@ -17,8 +47,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   if (usernameElem) {
     usernameElem.textContent = username;
   }
-
-console.log(usernameElem.textContent)
 
   // Initialize Materialize components
   M.FormSelect.init(document.querySelectorAll('select'));
@@ -70,6 +98,7 @@ console.log(usernameElem.textContent)
     }
   }
 
+
   // Handle create playlist submission
   async function handleCreatePlaylist() {
     const form = document.getElementById('createPlaylistForm');
@@ -89,7 +118,7 @@ console.log(usernameElem.textContent)
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ username, email,name }),
+          body: JSON.stringify({ username, email, name }),
         });
 
         if (res.ok) {

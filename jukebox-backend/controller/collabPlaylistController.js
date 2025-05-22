@@ -1,6 +1,6 @@
 const Playlist = require('../model/collaborativePlaylist');
 const UserPlaylist = require('../model/playlist');
-const io = require('../socket');
+const socketManager = require('../socket');
 const Song = require('../model/song');
 
 
@@ -23,7 +23,7 @@ exports.createPlaylist = async (req, res) => {
   await playlist.save();
 
   // Emit globally since it's a new playlist created
-  io.getIO().emit('playlistCreated', playlist);
+ socketManager.getIO().emit('playlistCreated', playlist);
 
   res.status(201).json({ message: 'Playlist created', playlist });
 };
@@ -60,7 +60,7 @@ exports.addSong = async (req, res) => {
 
   await playlist.save();
 
-  io.getIO().to(`playlist-${playlistId}`).emit('songAdded', {
+  socketManager.getIO().to(`playlist-${playlistId}`).emit('songAdded', {
     playlistId,
     song: playlist.songs.at(-1)
   });
@@ -85,7 +85,7 @@ exports.removeSong = async (req, res) => {
   await playlist.save();
 
   // Emit event to specific playlist room only
-  io.getIO().to(`playlist-${playlistId}`).emit('songRemoved', { playlistId, songId });
+  socketManager.getIO().to(`playlist-${playlistId}`).emit('songRemoved', { playlistId, songId });
 
   res.json({ message: 'Song removed', playlist });
 };
