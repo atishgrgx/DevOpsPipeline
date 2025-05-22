@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   const playlistListContainer = document.getElementById('playlistList');
   const playlistSongsModalElem = document.getElementById('playlistSongsModal');
   const playlistSongsModal = M.Modal.init(playlistSongsModalElem); // Only init once
-
+  M.Modal.init(document.querySelectorAll('.modal'));
   if (usernameElem) {
     usernameElem.textContent = username;
   }
@@ -191,40 +191,40 @@ document.addEventListener('DOMContentLoaded', async function () {
     console.log("1111")
     console.log("🎧 Setting up song search listener", songSearchInput, songSuggestions);
     if (songSearchInput && songSuggestions) {
-      console.log("🎧 Setting up song search listener");
+  console.log("🎧 Setting up song search listener");
 
-      songSearchInput.addEventListener('input', async () => {
-        const query = songSearchInput.value.trim();
+  songSearchInput.addEventListener('input', async () => {
+    const query = songSearchInput.value.trim();
 
-        songSuggestions.innerHTML = '';
-        if (!query) return;
+    songSuggestions.innerHTML = '';
+    if (!query) return;
 
-        try {
-          const res = await fetch(`http://localhost:3000/api/songs/top-songs`);
-          console.log("🎤 Fetched top songs"); // Fixed typo here
-          const allSongs = await res.json();
-          console.log(allSongs);
+    try {
+      const res = await fetch(`http://localhost:3000/api/songs/top-songs`);
+      console.log("🎤 Fetched top songs"); // Fixed typo here
+      const allSongs = await res.json();
+      console.log(allSongs);
 
-          const filtered = allSongs.filter(song =>
-            song.title.toLowerCase().includes(query.toLowerCase())
-          );
+      const filtered = allSongs.filter(song =>
+        song.title.toLowerCase().includes(query.toLowerCase())
+      );
 
-          filtered.slice(0, 5).forEach(song => {
-            const li = document.createElement('li');
-            li.classList.add('collection-item');
-            li.style.cursor = 'pointer';
-            li.textContent = song.title;
-            li.addEventListener('click', () => {
-              songSearchInput.value = song.title;
-              songSuggestions.innerHTML = '';
-            });
-            songSuggestions.appendChild(li);
-          });
-        } catch (err) {
-          console.error('Error fetching songs:', err);
-        }
+      filtered.slice(0, 5).forEach(song => {
+        const li = document.createElement('li');
+        li.classList.add('collection-item');
+        li.style.cursor = 'pointer';
+        li.textContent = song.title;
+        li.addEventListener('click', () => {
+          songSearchInput.value = song.title;
+          songSuggestions.innerHTML = '';
+        });
+        songSuggestions.appendChild(li);
       });
+    } catch (err) {
+      console.error('Error fetching songs:', err);
     }
+  });
+}
 
   }
 
