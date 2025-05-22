@@ -1,62 +1,66 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="UTF-8">
-  <title>Admin Panel</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 </head>
+<script src="../public/js/authGuard.js"></script>
 <body>
-  <div class="container">
-    <h4>Admin Dashboard</h4>
-    <table class="striped highlight responsive-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Current Status</th>
-          <th>Change Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="userTableBody">
-        <!-- Populated by admin.js -->
-      </tbody>
-    </table>
-  </div>
-  <div class="card-panel">
-    <h5>Manage Songs</h5>
-    <div class="row">
-      <div class="input-field col s6">
-        <input id="songTitle" type="text" class="validate">
-        <label for="songTitle">Song Title</label>
-      </div>
-      <div class="input-field col s6">
-        <input id="artist" type="text" class="validate">
-        <label for="artist">Artist</label>
-      </div>
-    </div>
-    <button class="btn green" onclick="addSong()">Add Song</button>
-    <button class="btn red" onclick="removeSong()">Remove Song</button>
-  </div>
-  
     <nav class="black">
         <div class="nav-wrapper container">
-            <a href="#" class="brand-logo">Admin Dashboard</a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="./home.html">Songs</a></li>
-            </ul>
+          <a href="#" class="brand-logo left">
+            <img src="../public/images/logofinal.png" alt="JukeBox Logo" style="height: 60px;">
+          </a>
+          <a href="#" data-target="mobile-menu" class="sidenav-trigger right">
+            <i class="material-icons white-text">menu</i>
+          </a>
+          <ul id="nav-mobile" class="right hide-on-large-and-down nav-big">
+            <li><a href="./home">HOME</a></li>
+            <li><a href="./songrecommendation">SONG RECOMMENDATION</a></li>
+            <li><a href="./playlist">PLAYLIST</a></li>
+            <li><a href="./about">ABOUT</a></li>
+            <li><a href="./" onclick="sessionStorage.clear()">LOG-OUT</a></li>
+            <li><a href="./admin">ADMIN</a>
+                <a href="./profile">
+                  <img src="../public/images/user.jpeg" alt="User" style="height: 40px; border-radius: 50%;">
+                </a>
+              </li>
+          </ul>      
         </div>
-    </nav>
+      </nav>
+    <div class="container">
+        <h4>Admin Dashboard</h4>
+        <h2 class="center-align">User Management</h2>
+        <table class="striped highlight responsive-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Current Status</th>
+                    <th>Change Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody">
+                <!-- Populated by admin.js -->
+            </tbody>
+        </table>
+    </div>
+
 
     <div class="container">
         <h2 class="center-align">Song Management</h2>
 
         <div class="row">
             <div class="col s12 m6">
-                <a href="#add-song-with-file" class="waves-effect waves-light btn modal-trigger"><i class="material-icons left">add</i>Add New Song With File</a>
+                <a href="#add-song-with-file" class="waves-effect waves-light btn modal-trigger"><i
+                        class="material-icons left">add</i>Add New Song With File</a>
             </div>
             <div class="col s12 m6">
-                <a href="#add-song-modal" class="waves-effect waves-light btn modal-trigger"><i class="material-icons left">add</i>Add New Song</a>
+                <a href="#add-song-modal" class="waves-effect waves-light btn modal-trigger"><i
+                        class="material-icons left">add</i>Add New Song</a>
             </div>
         </div>
 
@@ -74,7 +78,7 @@
                 </tr>
             </thead>
             <tbody id="song-list">
-                </tbody>
+            </tbody>
         </table>
 
         <div id="add-song-modal" class="modal">
@@ -93,17 +97,25 @@
             </div>
         </div>
 
-        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="../public/js/admin.js"></script>
     <script>
-        $(document).ready(function(){
-            $('.modal').modal();
+        // After role check passes, initialize Materialize components
+        document.addEventListener('DOMContentLoaded', function () {
+          const carousels = document.querySelectorAll('.carousel');
+          if (carousels.length > 0) {
+            M.Carousel.init(carousels);
+          }
+      
+          const modals = document.querySelectorAll('.modal');
+          M.Modal.init(modals);
         });
-    </script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-   <script src="../public/js/admin.js"></script>
+      </script>
+      
+      
 </body>
+
 </html>
