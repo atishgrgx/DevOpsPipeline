@@ -158,10 +158,28 @@ const getSongByIdDB = async (req, res) => {
     }
 };
 
+const getTopSongs = async (req, res) => {
+    try {
+        const songs = await Song.find({})
+            .sort({ popularity: -1 }) // optional: sort by popularity
+            .limit(25); // only return 15
+
+        if (!songs || songs.length === 0) {
+            return res.status(404).json({ message: 'No songs found in database.' });
+        }
+
+        res.status(200).json(songs);
+    } catch (error) {
+        console.error('Error fetching top songs:', error);
+        res.status(500).json({ error: 'Failed to fetch top songs from database.' });
+    }
+};
+
 module.exports = {
     saveSongsFromFile,
     saveSongsByName,
     deleteSongById,
     getAllSongs,
-    getSongByIdDB
+    getSongByIdDB,
+    getTopSongs
 };
