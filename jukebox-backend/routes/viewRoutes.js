@@ -13,5 +13,7 @@ router.get('/playlist', (req, res) => res.sendFile(path.join(basePath, 'playlist
 router.get('/profile', (req, res) => res.sendFile(path.join(basePath, 'profile.html')));
 router.get('/register', (req, res) => res.sendFile(path.join(basePath, 'register.html')));
 router.get('/songrecommendation', (req, res) => res.sendFile(path.join(basePath, 'songrecommendation.html')));
+router.get('/playlistLiveRoom', (req, res) => res.sendFile(path.join(basePath, 'playlistLiveRoom.html')));
+router.get('/landing', (req, res) => res.sendFile(path.join(basePath, 'landing.html')));
 
 module.exports = router;

@@ -174,6 +174,35 @@ const getTopSongs = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch top songs from database.' });
     }
 };
+
+const { getArtistById } = require('../services/spotifyService.js');
+
+const getTopArtists = async (req, res) => {
+    try {
+        // Fetch 100 songs (more chance to find unique artists)
+        const songs = await Song.find({}).limit(100);
+
+        // Extract artist IDs from songs
+        const artistIdSet = new Set();
+        for (const song of songs) {
+            for (const artist of song.artists) {
+                artistIdSet.add(artist.id);
+            }
+            if (artistIdSet.size >= 25) break; // stop once we hit 25 unique artists
+        }
+
+        const artistIds = Array.from(artistIdSet).slice(0, 25);
+
+        // Fetch artist details from Spotify
+        const artists = await Promise.all(artistIds.map(getArtistById));
+
+        res.status(200).json(artists);
+    } catch (error) {
+        console.error('Error fetching top artists:', error);
+        res.status(500).json({ error: 'Failed to fetch top artists' });
+    }
+};
+
 const searchSongs = async (req, res) => {
     try {
         const query = req.query.q || '';
@@ -200,5 +229,6 @@ module.exports = {
     getAllSongs,
     getSongByIdDB,
     getTopSongs,
+    getTopArtists,
     searchSongs
 };
