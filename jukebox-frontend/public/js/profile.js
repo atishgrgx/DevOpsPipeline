@@ -73,5 +73,30 @@ function savePersonalInfo() {
       alert("Server error. Please try again.");
     });
 }
+// Deleting the user profile
+function deleteMyAccount() {
+  if (!confirm("Are you sure you want to delete your account? This cannot be undone.")) return;
+
+  const token = localStorage.getItem("token");
+
+  fetch("http://localhost:3000/api/auth/deteleProfile", {
+    method: "DELETE",
+    headers: {
+      Authorization: token
+    }
+  })
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message);
+
+      // Clear session/local storage
+      sessionStorage.clear();
+      localStorage.clear();
+
+      // Redirect to homepage or login
+      window.location.href = "/login";
+    })
+}
+
 
 
