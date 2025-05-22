@@ -21,7 +21,7 @@ fetch("http://localhost:3000/api/users")
           <button class="btn blue btn-small" onclick="updateStatus('${user._id}')">Submit</button>
         </td>
         <td>
-          <button class="btn-small orange" onclick="sendWarning('${user.email}')">Warn</button>
+          <button class="btn-small red" onclick="deleteUser('${user._id}')">Delete</button>
         </td>
       `;
 
@@ -41,9 +41,16 @@ function updateStatus(userId) {
     .then(() => location.reload());
 }
 
-function sendWarning(email) {
-  const msg = prompt(`Enter warning for ${email}:`);
-  if (msg) {
-    alert(`Warning sent: ${msg}`);
+function deleteUser(userId) {
+    if (!confirm("Are you sure you want to delete this user?")) return;
+  
+    fetch(`/api/users/${userId}`, {
+      method: "DELETE"
+    })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message || "User deleted");
+        location.reload();
+      })
+      .catch(() => alert("Failed to delete user"));
   }
-}

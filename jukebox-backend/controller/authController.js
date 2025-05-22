@@ -1,4 +1,5 @@
 const User = require('../model/user');
+const DeletedUser = require('../model/deletedUser');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -13,6 +14,11 @@ const register = async (req, res) => {
 
   try {
     // Check if user already exists
+    const deleted = await DeletedUser.findOne({ email });
+    if (deleted) {
+      return res.status(403).json({ message: 'This email was previously deleted and cannot be reused.' });
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
@@ -47,7 +53,6 @@ const login = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // ❌ Check if the user is blocked
     if (user.blocked) {
       return res.status(403).json({ message: 'Your account has been blocked. Please contact support.' });
     }

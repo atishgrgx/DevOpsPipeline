@@ -23,9 +23,26 @@
       </tbody>
     </table>
   </div>
-
+  <div class="card-panel">
+    <h5>Manage Songs</h5>
+    <div class="row">
+      <div class="input-field col s6">
+        <input id="songTitle" type="text" class="validate">
+        <label for="songTitle">Song Title</label>
+      </div>
+      <div class="input-field col s6">
+        <input id="artist" type="text" class="validate">
+        <label for="artist">Artist</label>
+      </div>
+    </div>
+    <button class="btn green" onclick="addSong()">Add Song</button>
+    <button class="btn red" onclick="removeSong()">Remove Song</button>
+  </div>
+  
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="../public/js/admin.js"></script>
+ 
+  </script>
 </body>
 </html>
