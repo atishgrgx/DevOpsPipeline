@@ -10,15 +10,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   M.updateTextFields();
 
-  // Display user info from sessionStorage
-  const name = sessionStorage.getItem("userName");
-  const email = sessionStorage.getItem("userEmail") || "Not available";
+  const token = localStorage.getItem("token");
 
-  const nameEl = document.getElementById("userNameDisplay");
-  const emailEl = document.getElementById("userEmail");
-
-  if (nameEl) nameEl.textContent = name;
-  if (emailEl) emailEl.textContent = email;
+fetch("http://localhost:3000/api/auth/getUserProfile", {
+    method: "GET",
+    headers: {
+      Authorization: token
+    }
+  })
+    .then(res => res.json())
+    .then(user => {
+      document.getElementById("userNameDisplay").textContent = user.username;
+      document.getElementById("userEmail").textContent = user.email;
+      document.getElementById("dobDisplay").textContent = user.dateOfBirth ? new Date(user.dateOfBirth).toDateString() : "Not set";
+      document.getElementById("ageDisplay").textContent = user.age;
+      document.getElementById("genderDisplay").textContent = user.gender;
+      document.getElementById("bioDisplay").textContent = user.bio;
+    });
 });
 
 // Save personal info from modal

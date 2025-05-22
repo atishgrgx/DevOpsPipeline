@@ -8,4 +8,4 @@ if (!token || !userEmail || !userRole) {
 }
 
 // Checking on console for debugging
-console.log("Logged-in user:", user.email, user.role);
+console.log("Logged-in user:", userEmail, userRole);
