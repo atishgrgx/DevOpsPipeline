@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Profile</title>
+  <script src="../public/js/authGuard.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link rel="stylesheet" href="../public/css/style.css">
@@ -23,7 +24,8 @@
         <li><a href="./songrecommendation">SONG RECOMMENDATION</a></li>
         <li><a href="./playlist">PLAYLIST</a></li>
         <li><a href="./about">ABOUT</a></li>
-        <li><a href="./landing" onclick="sessionStorage.clear()">LOG-OUT</a></li>
+        <li><a href="./" onclick="sessionStorage.clear()">LOG-OUT</a></li>
+        <li id="adminTab" style="display: none;"><a href="./admin">Admin</a></li>
         <li>
           <a href="./profile" class="user left">
             <img src="../public/images/user.jpeg" alt="User" style="height: 50px; border-radius: 50%;">
