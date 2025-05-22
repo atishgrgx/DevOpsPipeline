@@ -18,7 +18,6 @@ const io = socketIO(server, {
   }
 });
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -41,12 +40,16 @@ const songRoutes = require('./routes/songRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const userListRoutes = require('./routes/userlistRoutes');
 const viewRoutes = require('./routes/viewRoutes');
+const playlistRoutes = require('./routes/playlistRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/songs', songRoutes);
 app.use('/api/users', userListRoutes);
 app.use('/api/users', adminRoutes);
+app.use('/api/playlists', playlistRoutes); 
 app.use('/', viewRoutes);
+
+
 
 // WebSocket Chat
 require('./socket/chat')(io);
