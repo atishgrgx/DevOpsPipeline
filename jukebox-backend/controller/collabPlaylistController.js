@@ -10,6 +10,7 @@ exports.getPlaylists = async (req, res) => {
   const playlists = await Playlist.find().sort({ createdAt: -1 });
   res.json(playlists);
 };
+
 exports.createPlaylist = async (req, res) => {
   const { name, imageUrl, userId, username } = req.body;
 
@@ -24,7 +25,7 @@ exports.createPlaylist = async (req, res) => {
 
   // Emit globally since it's a new playlist created
  socketManager.getIO().emit('playlistCreated', playlist);
-
+console.log('⚡ Playlist added by', playlist.createdBy.username);
   res.status(201).json({ message: 'Playlist created', playlist });
 };
 

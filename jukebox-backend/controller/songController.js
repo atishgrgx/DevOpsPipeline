@@ -157,6 +157,7 @@ const getSongByIdDB = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch song from database.' });
     }
 };
+
 const getTopSongs = async (req, res) => {
     try {
         const songs = await Song.find({})

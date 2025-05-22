@@ -84,3 +84,62 @@ footer .icons a {
     bottom: 20px;
   }
 }
+
+ /* Make modal text black */
+#playlistSongsModal .modal-content, 
+#playlistSongsModal table, 
+#playlistSongsModal table th, 
+#playlistSongsModal table td {
+  color: black !important;
+}
+/* Container for search and button */
+#playlistSongsModal > .modal-content > div {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Search input modern style */
+#songSearchInput {
+  flex-grow: 1;
+  padding: 6px 12px;      /* less vertical padding */
+  font-size: 14px;        /* slightly smaller font */
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  outline: none;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  height: 32px;           /* explicit height to control total size */
+  box-sizing: border-box; /* make sure padding is included in height */
+}
+
+#songSearchInput:focus {
+  border-color: #5c6bc0;
+  box-shadow: 0 0 6px #5c6bc0aa;
+}
+
+/* Add button modern style */
+#addSongButton {
+  padding: 10px 22px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgb(37 117 252 / 0.4);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#addSongButton:hover {
+  background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+  box-shadow: 0 6px 18px rgb(106 17 203 / 0.6);
+}
+
+#addSongButton:active {
+  background: #1a4ed8;
+  box-shadow: none;
+}

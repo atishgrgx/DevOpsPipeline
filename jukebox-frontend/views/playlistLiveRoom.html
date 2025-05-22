@@ -87,6 +87,55 @@
     </div>
   </div>
 
+  <!-- Add Song Modal -->
+<div id="addSongModal" class="modal">
+  <div class="modal-content">
+    <h4>Add Song to Playlist</h4>
+    <div class="input-field">
+      <input type="text" id="songSearchInput" placeholder="Search for a song..." />
+    </div>
+    <ul id="songSuggestions" class="collection"></ul>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+  </div>
+</div>
+
+<!-- Playlist Songs Modal -->
+<div id="playlistSongsModal" class="modal">
+  <div class="modal-content" style="color: black;">
+    <h4 id="modalPlaylistName"></h4> <!-- Playlist name shown here -->
+
+    <!-- Search bar and Add button container -->
+    <div style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center;">
+      <input 
+        type="text" 
+        id="songSearchInput" 
+        placeholder="Search songs..." 
+        style="flex-grow: 1; padding: 8px; font-size: 16px;"
+      />
+      <ul id="searchResults" style="list-style: none; padding: 0; margin-top: 4px; max-height: 200px; overflow-y: auto; background: white; position: absolute; width: 100%; z-index: 1000;"></ul>
+      <button id="addSongButton" style="padding: 8px 16px; font-size: 16px; cursor: pointer;">
+        Add
+      </button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Song Title</th>
+          <th>Added By</th>
+        </tr>
+      </thead>
+      <tbody id="songsTableBody"></tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-close btn-flat pink-text">Close</a> <!-- Close button -->
+  </div>
+</div>
+
+
   <!-- Footer -->
   <footer class="page-footer black">
     <div class="container">
