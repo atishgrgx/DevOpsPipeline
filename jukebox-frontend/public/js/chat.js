@@ -30,7 +30,7 @@ form?.addEventListener("submit", (e) => {
   e.preventDefault();
   const msg = input.value.trim();
   if (msg && selectedRoom) {
-    const username = sessionStorage.getItem("userName") || "Guest";
+    const username = sessionStorage.getItem("userName");
     socket.emit("chatMessage", {
       room: selectedRoom,
       message: `${username}: ${msg}`,
@@ -90,7 +90,7 @@ privateForm?.addEventListener("submit", (e) => {
   e.preventDefault();
   const msg = privateInput.value.trim();
   if (msg && privateTargetEmail) {
-    const username = sessionStorage.getItem("userName") || "Guest";
+    const username = sessionStorage.getItem("userName");
     const fullMsg = `${username} (private): ${msg}`;
 
     socket.emit("privateMessage", {
