@@ -10,50 +10,68 @@ document.addEventListener("DOMContentLoaded", () => {
 
   M.updateTextFields();
 
-  // Display user info from sessionStorage
-  const name = sessionStorage.getItem("userName");
-  const email = sessionStorage.getItem("userEmail") || "Not available";
+  const token = localStorage.getItem("token");
 
-  const nameEl = document.getElementById("userNameDisplay");
-  const emailEl = document.getElementById("userEmail");
-
-  if (nameEl) nameEl.textContent = name;
-  if (emailEl) emailEl.textContent = email;
+fetch("http://localhost:3000/api/auth/getUserProfile", {
+    method: "GET",
+    headers: {
+      Authorization: token
+    }
+  })
+    .then(res => res.json())
+    .then(user => {
+      document.getElementById("userNameDisplay").textContent = user.username;
+      document.getElementById("userEmail").textContent = user.email;
+      document.getElementById("dobDisplay").textContent = user.dateOfBirth ? new Date(user.dateOfBirth).toDateString() : "Not set";
+      document.getElementById("ageDisplay").textContent = user.age;
+      document.getElementById("genderDisplay").textContent = user.gender;
+      document.getElementById("bioDisplay").textContent = user.bio;
+    });
 });
-
-// Logout handler
-function handleLogout() {
-  sessionStorage.clear();
-  window.location.href = 'login.html';
-}
 
 // Save personal info from modal
 function savePersonalInfo() {
-  const dob = document.getElementById("dob")?.value;
-  const age = document.getElementById("age")?.value;
-  const gender = document.getElementById("gender")?.value;
+  const dateOfBirth = document.getElementById("dob").value;
+  const age = document.getElementById("age").value;
+  const gender = document.getElementById("gender").value;
+  const bio = document.getElementById("bio").value;
 
-  if (!dob || !age || !gender) {
-    M.toast({ html: "Please fill all fields", classes: "red" });
-    return;
-  }
+  const token = localStorage.getItem("token");
 
-  const dobDisplay = document.getElementById("dobDisplay");
-  const ageDisplay = document.getElementById("ageDisplay");
-  const genderDisplay = document.getElementById("genderDisplay");
-
-  if (dobDisplay) dobDisplay.textContent = dob;
-  if (ageDisplay) ageDisplay.textContent = age;
-  if (genderDisplay) genderDisplay.textContent = gender;
-
-  const modalInstance = M.Modal.getInstance(document.getElementById("personalModal"));
-  if (modalInstance) modalInstance.close();
-
-  M.toast({ html: "Personal details saved", classes: "green" });
+  fetch("http://localhost:3000/api/auth/profileUpdate", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token
+    },
+    body: JSON.stringify({
+      dateOfBirth,
+      age,
+      gender,
+      bio
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.user) {
+        alert("Profile updated successfully!");
+        // Update UI
+        document.getElementById("dobDisplay").textContent = new Date(data.user.dateOfBirth).toDateString();
+        document.getElementById("ageDisplay").textContent = data.user.age;
+        document.getElementById("genderDisplay").textContent = data.user.gender;
+        document.getElementById("bioDisplay").textContent = data.user.bio;
+        const modalElem = document.getElementById("personalModal");
+        const modalInstance = M.Modal.getInstance(modalElem);
+        modalInstance.close();
+        M.toast({ html: "Profile updated successfully!", classes: "green" });
+      } else {
+        alert("Failed to update profile.");
+      }
+    })
+    .catch(err => {
+      console.error("Update error:", err);
+      alert("Server error. Please try again.");
+    });
 }
 
-// Optional: if using <a id="logoutBtn">Logout</a>
-document.getElementById("logoutBtn")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  handleLogout();
-});
+

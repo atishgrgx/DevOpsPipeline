@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <script src="../public/js/authGuard.js"></script>
+     <script src="../public/js/logout.js"></script>
     <title>Juke Box</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -27,7 +28,7 @@
                 <li><a href="./songrecommendation">SONG RECOMMENDATION</a></li>
                 <li><a href="./playlist">PLAYLIST</a></li>
                 <li><a href="./about">ABOUT</a></li>
-                <li><a href="./" onclick="sessionStorage.clear()">LOG-OUT</a></li>
+                <li><a href="#" id="logoutBtn">LOGOUT</a></li>
                 <li id="adminTab" style="display: none;"><a href="./admin">Admin</a></li>
                 <li><a href="./profile"><img src="../public/images/user.jpeg" alt="User" class="circle responsive-img" style="height:40px;"></a></li>
             </ul>
@@ -40,7 +41,7 @@
         <li><a href="./songrecommendation">SONG RECOMMENDATION</a></li>
         <li><a href="./playlist">PLAYLIST</a></li>
         <li><a href="./about">ABOUT</a></li>
-        <li><a href="./" onclick="sessionStorage.clear()">LOG-OUT</a></li>
+        <li><a href="#" id="logoutBtn">LOGOUT</a></li>
         <li id="adminTab" style="display: none;"><a href="./admin">Admin</a></li>
         <li><a href="./profile"><img src="../public/images/user.jpeg" alt="User" class="circle responsive-img" style="height:40px;"></a></li>
     </ul>

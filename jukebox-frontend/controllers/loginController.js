@@ -16,20 +16,30 @@ export async function handleLogin(event) {
     console.log("Login Response:", data);
 
     if (res.ok) {
-      sessionStorage.setItem("userEmail", email);
-      sessionStorage.setItem("userName", data.name || "User");
-      sessionStorage.setItem("userRole", data.role);
+      const user = data.user;
+
+      // Store token
+      localStorage.setItem("token", data.token);
+
+      // Store user data in sessionStorage
+      sessionStorage.setItem("userName", user.username || "User");
+      sessionStorage.setItem("userEmail", user.email || "");
+      sessionStorage.setItem("userDOB", user.dateOfBirth || "");
+      sessionStorage.setItem("userAge", user.age || "");
+      sessionStorage.setItem("userGender", user.gender || "");
+      sessionStorage.setItem("userBio", user.bio || "");
+      sessionStorage.setItem("userRole", user.role || "user");
 
       msgBox.textContent = "Login successful!";
       msgBox.style.color = "lightgreen";
 
       setTimeout(() => {
-        if (data.role === "admin") {
+        if (user.role === "admin") {
           window.location.href = "/admin";
         } else {
           window.location.href = "/home";
         }
-      }, 1500);
+      }, 1000);
     } else {
       msgBox.textContent = data.message || "Login failed.";
       msgBox.style.color = "red";
