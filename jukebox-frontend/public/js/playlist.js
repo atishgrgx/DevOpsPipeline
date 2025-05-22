@@ -18,6 +18,8 @@ let playlist = [];
 let playlistSongs = [];
 let allPlaylists = [];
 
+let currentPlaylistId = null;
+
 async function fetchPlaylists() {
   try {
     const response = await fetch('http://127.0.0.1:3000/api/playlists');
@@ -58,12 +60,13 @@ function createCard(item, type) {
 
   const button = document.createElement('button');
   button.textContent = 'Explore';
-  button.classList.add('explore-button'); // Add this class for styling
+  button.classList.add('explore-button');
   button.addEventListener('click', () => {
-  // Load matching playlist songs by title
   const matched = allPlaylists.find(p => p.playlist_name === item.title);
-  playlistSongs = matched?.songs || [];
-  openPlaylistModal();
+  if (!matched) return;
+
+  playlistSongs = matched.songs;
+  openPlaylistModal(matched); 
 });
   content.appendChild(button);
 
@@ -86,6 +89,13 @@ function openPlaylistModal() {
   }
 }
 
+function openPlaylistModal(playlist) {
+  currentPlaylistId = playlist._id;  // Save playlist MongoDB ID globally
+  // existing code to open modal and render songs
+  renderPlaylistSongs();
+  const modal = document.getElementById('playlist-modal');
+  if (modal) modal.classList.add('active');
+}
 
 function closePlaylistModal() {
   const modal = document.getElementById('playlist-modal');
@@ -187,11 +197,123 @@ function renderPlaylistSongs() {
   // Attach remove event to each button
   const removeButtons = document.querySelectorAll('.remove-button');
   removeButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
-      const songIndex = parseInt(e.target.getAttribute('data-index'), 10);
-      playlistSongs.splice(songIndex, 1); // Remove song
-      renderPlaylistSongs(); // Re-render table
-    });
+  button.addEventListener('click', async (e) => {
+    const songIndex = parseInt(e.target.getAttribute('data-index'), 10);
+    const songToRemove = playlistSongs[songIndex];
+
+    if (!songToRemove?.track_id) {
+      alert('Song ID missing, cannot remove');
+      return;
+    }
+
+    const updatedPlaylist = await removeSong(currentPlaylistId, songToRemove.track_id);
+    if (updatedPlaylist) {
+      playlistSongs = updatedPlaylist.songs;
+      renderPlaylistSongs();
+    }
   });
+});
 }
 
+async function removeSong(playlistId, songId) {
+  try {
+    const endpoint = `http://127.0.0.1:3000/api/playlists/${playlistId}/songs/${songId}`;
+    console.log('DELETE request to:', endpoint);
+    const response = await fetch(endpoint, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to remove song');
+    }
+    const updatedPlaylist = await response.json();
+    return updatedPlaylist;
+  } catch (error) {
+    console.error('Error removing song:', error);
+    alert('Failed to remove song');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const deleteBtn = document.querySelector('.delete-btn');
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', async () => {
+      if (!currentPlaylistId) {
+        alert('No playlist selected');
+        return;
+      }
+
+      if (!confirm('Are you sure you want to delete this playlist?')) return;
+
+      await deletePlaylist(currentPlaylistId);
+      closePlaylistModal();
+    }); 
+  }
+});
+
+async function deletePlaylist(playlistId) {
+  try {
+    const response = await fetch(`http://127.0.0.1:3000/api/playlists/${playlistId}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to delete playlist');
+    }
+
+    alert('Playlist deleted successfully');
+    // Refresh playlists after deletion
+    allPlaylists = allPlaylists.filter(p => p._id !== playlistId);
+    // Update UI (call your function that renders playlists)
+    window.location.reload();
+  } catch (error) {
+    console.error('Error deleting playlist:', error);
+    alert('Failed to delete playlist'); 
+  }
+}
+
+const playlistNameInput = document.getElementById('playlist-name');
+
+playlistNameInput.addEventListener('keypress', async (event) => {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    
+    const newName = playlistNameInput.value.trim();
+    if (!newName) {
+      alert('Playlist name cannot be empty');
+      return;
+    }
+    
+    if (!currentPlaylistId) {
+      alert('No playlist selected');
+      return;
+    }
+    
+    try {
+      const response = await fetch(`http://127.0.0.1:3000/api/playlists/${currentPlaylistId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ playlist_name: newName }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update playlist name');
+      }
+      
+      const updatedPlaylist = await response.json();
+      // Update local data
+      const index = allPlaylists.findIndex(p => p._id === currentPlaylistId);
+      if (index !== -1) {
+        allPlaylists[index].playlist_name = updatedPlaylist.playlist_name;
+      }
+      
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      alert('Error updating playlist name');
+    }
+  }
+});
