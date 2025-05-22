@@ -15,7 +15,7 @@ export function handleLogin(event) {
       if (res.ok) {
         sessionStorage.setItem("userEmail", data.user.email);
         sessionStorage.setItem("userName", data.user.username || "User");
-
+        localStorage.setItem("token", data.token);
         msgBox.textContent = "Login successful!";
         msgBox.style.color = "lightgreen";
 

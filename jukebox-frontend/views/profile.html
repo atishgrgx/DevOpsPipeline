@@ -49,10 +49,15 @@
             <p><strong>DOB:</strong> <span id="dobDisplay">Not set</span></p>
             <p><strong>Age:</strong> <span id="ageDisplay">Not set</span></p>
             <p><strong>Gender:</strong> <span id="genderDisplay">Not set</span></p>
+            <p><strong>Bio:</strong> <span id="bioDisplay">Not set</span></p>
             <div class="center-align personal-info-wrapper" style="margin-top: 20px;">
               <a class="btn-floating btn-small modal-trigger teal" href="#personalModal" title="Edit Personal Info">
                 <i class="material-icons">edit</i>
               </a>
+              <!-- Delete Button -->
+              <button class="btn-floating btn-small red" onclick="deleteMyAccount()" title="Delete Account" style="margin-left: 10px;">
+                <i class="material-icons">delete</i>
+              </button>
             </div>
           </div>
         </div>
@@ -158,6 +163,11 @@
         </select>
         <label>Gender</label>
       </div>
+      <div class="input-field">
+        <textarea id="bio" class="materialize-textarea"></textarea>
+        <label for="bio" class="active">Bio</label>
+      </div>
+
     </div>
     <div class="modal-footer">
       <button class="btn green" onclick="savePersonalInfo()">Save</button>
