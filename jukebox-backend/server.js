@@ -6,6 +6,7 @@ const cors = require('cors');
 const http = require('http');
 
 const app = express();
+const app = express();
 const server = http.createServer(app);
 
 // ✅ Use central socket manager
@@ -32,10 +33,10 @@ mongoose.connect(process.env.MONGO_URL, {
   useUnifiedTopology: true,
 });
 mongoose.connection.on('connected', () => {
-  console.log('✅ Connected to MongoDB Atlas!');
+  console.log('Connected to MongoDB Atlas!');
 });
 mongoose.connection.on('error', (err) => {
-  console.error('❌ MongoDB connection error:', err);
+  console.error('MongoDB connection error:', err);
 });
 
 // Routes

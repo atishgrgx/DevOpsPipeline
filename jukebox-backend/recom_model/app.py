@@ -11,7 +11,7 @@ CORS(app)
 song_recommender = MusicRecommender('jukebox-backend/recom_model/filtered_data.csv')
 playlist_recommender = PlaylistRecommender('jukebox-backend/recom_model/filtered_data.csv')
 
-client = MongoClient("mongo_string")
+client = MongoClient("mongodb+srv://dhanushsoma17:dhanushsoma17@jukeboxdb.v158hmf.mongodb.net/")
 db = client['JUKEBOXDB']
 collection = db['songs']
 
