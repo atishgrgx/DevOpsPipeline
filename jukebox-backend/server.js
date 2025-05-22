@@ -1,4 +1,4 @@
-require('dotenv').config(); // Load .env variables
+require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -6,35 +6,30 @@ const path = require('path');
 const cors = require('cors');
 const http = require('http');
 const socketIO = require('socket.io');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 
-const app = express(); //define app only once
+const app = express();
 const server = http.createServer(app);
 
-// Setup Socket.IO with CORS for frontend on 127.0.0.1:5500
+// Setup Socket.IO
 const io = socketIO(server, {
   cors: {
-    origin: "*", // Or 'http://127.0.0.1:5500'
+    origin: "*",
     methods: ["GET", "POST"]
   }
 });
 
-const PORT = process.env.PORT || 3000;
-// Routes
-const authRoutes = require('./routes/authRoutes');
-const songRoutes = require('./routes/songRoutes');
-const playlistRoutes = require('./routes/playlistRoutes');
-const userListRoutes = require('./routes/userlistRoutes');
-// Apply Express CORS before routes
+// Middleware order matters! ✅
 app.use(cors());
-
-// Getting user list
-app.use('/api/users', userListRoutes);
-
-
-// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors()); // allow all origins during development
+app.use(cookieParser()); // ✅ Apply cookie-parser before session
+app.use(session({
+  secret: 'secret-key',
+  resave: false,
+  saveUninitialized: true
+}));
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URL, {
@@ -48,15 +43,29 @@ mongoose.connection.on('error', (err) => {
   console.error('MongoDB connection error:', err);
 });
 
-// REST Routes
+// API Routes (After session & cookieParser!)
+const authRoutes = require('./routes/authRoutes');
+const songRoutes = require('./routes/songRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const userListRoutes = require('./routes/userlistRoutes');
+const viewRoutes = require('./routes/viewRoutes');
+const playlistRoutes = require('./routes/playlistRoutes');
+
 app.use('/api/auth', authRoutes);
 app.use('/api/songs', songRoutes);
+app.use('/api/users', userListRoutes);
+app.use('/api/users', adminRoutes);
 app.use('/api/playlists', playlistRoutes); 
+app.use('/', viewRoutes);
 
-// WebSocket logic (keep chat logic in a separate file)
+// WebSocket Chat
 require('./socket/chat')(io);
 
-// Start HTTP server
+// Serve frontend assets
+app.use(express.static(path.join(__dirname, '../jukebox-frontend')));
+
+// Start server
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(` Server running at http://localhost:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });

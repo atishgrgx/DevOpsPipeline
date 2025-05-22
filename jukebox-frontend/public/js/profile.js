@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   M.updateTextFields();
 
   // Display user info from sessionStorage
-  const name = sessionStorage.getItem("userName") || "Guest";
+  const name = sessionStorage.getItem("userName");
   const email = sessionStorage.getItem("userEmail") || "Not available";
 
   const nameEl = document.getElementById("userNameDisplay");
@@ -20,12 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (nameEl) nameEl.textContent = name;
   if (emailEl) emailEl.textContent = email;
 });
-
-// Logout handler
-function handleLogout() {
-  sessionStorage.clear();
-  window.location.href = 'login.html';
-}
 
 // Save personal info from modal
 function savePersonalInfo() {
@@ -72,8 +66,4 @@ function savePersonalInfo() {
     });
 }
 
-// Optional: if using <a id="logoutBtn">Logout</a>
-document.getElementById("logoutBtn")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  handleLogout();
-});
+
