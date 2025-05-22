@@ -4,10 +4,10 @@ const jwt = require('jsonwebtoken');
 
 const register = async (req, res) => {
   // Extract user data from request body
-  const { username, email, password } = req.body;
+  const { username, email, password, dateOfBirth, age, gender, bio } = req.body;
 
   // Validate input
-  if (!username || !email || !password) {
+  if (!username || !email || !password || !dateOfBirth || !age || !gender || !bio) {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
@@ -22,7 +22,16 @@ const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create and save new user
-    const newUser = new User({username,email,password: hashedPassword, role: 'user' }); //force
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+      dateOfBirth,
+      age,
+      gender,
+      bio,
+      role: 'user'
+    });
     await newUser.save();
 
     res.status(201).json({ message: 'User registered successfully' });
