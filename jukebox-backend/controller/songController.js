@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const Song = require('../model/song.js');
-const { getSongById, getSongByName } = require('../services/spotifyService.js');
+const { getSongById, getSongByName, getArtistById } = require('../services/spotifyService.js');
+
 
 const saveSongsFromFile = async (req, res) => {
     try {
@@ -174,8 +175,6 @@ const getTopSongs = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch top songs from database.' });
     }
 };
-
-const { getArtistById } = require('../services/spotifyService.js');
 
 const getTopArtists = async (req, res) => {
     try {
