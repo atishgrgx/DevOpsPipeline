@@ -10,6 +10,12 @@ module.exports = (io, socket) => {
     socket.join(`playlist-${playlistId}`);
     console.log(`🔗 ${socket.id} joined playlist-${playlistId}`);
 
+    // Emit to others in the room that a new user joined
+    socket.to(`playlist-${playlistId}`).emit('userJoined', {
+      userId: socket.id, // or user name if you track it
+      message: `A user joined playlist-${playlistId}`
+    });
+
     if (playlists[playlistId]) {
       socket.emit('updatePlaylist', playlists[playlistId]);
     }

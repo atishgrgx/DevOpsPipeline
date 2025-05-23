@@ -67,6 +67,11 @@ exports.addSong = async (req, res) => {
   });
 
   res.json({ message: 'Song added', playlist });
+  socketManager.on('connection', (socket) => {
+  socket.on('joinPlaylist', (playlistId) => {
+    socket.join(playlistId);
+  });
+});
 };
 
 

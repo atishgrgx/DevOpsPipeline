@@ -89,49 +89,56 @@
   </div>
 
   <!-- Add Song Modal -->
-<div id="addSongModal" class="modal">
-  <div class="modal-content">
-    <h4>Add Song to Playlist</h4>
-    <div class="input-field">
-      <input type="text" id="songSearchInput" placeholder="Search for a song..." />
+  <div id="addSongModal" class="modal">
+    <div class="modal-content">
+      <h4>Add Song to Playlist</h4>
+      <div class="input-field">
+        <input type="text" id="songSearchInput" placeholder="Search for a song..." />
+      </div>
+      <ul id="songSuggestions" class="collection"></ul>
     </div>
-    <ul id="songSuggestions" class="collection"></ul>
-  </div>
-  <div class="modal-footer">
-    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
-  </div>
-</div>
-
-<!-- Playlist Songs Modal -->
-<div id="playlistSongsModal" class="modal">
-  <div class="modal-content" style="color: black;">
-    <h4 id="modalPlaylistName"></h4> <!-- Playlist name shown here -->
-
-    <!-- Search bar and Add button container -->
-    <div style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center;">
-    <div style="position: relative; width: 300px;">
-  <input type="text" id="searchInput" placeholder="Search songs..." autocomplete="off" />
-  <ul id="suggestions" style="list-style: none; margin: 0; padding: 0; position: absolute; width: 100%; background: white; border: 1px solid #ccc; display: none;"></ul>
-</div>
-      <button id="addSongButton" style="padding: 8px 16px; font-size: 16px; cursor: pointer;">
-        Add
-      </button>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
     </div>
+  </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Song Title</th>
-          <th>Added By</th>
-        </tr>
-      </thead>
-      <tbody id="songsTableBody"></tbody>
-    </table>
-  </div>
+  <!-- Playlist Songs Modal -->
+  <div id="playlistSongsModal" class="modal">
+    <div class="modal-content" style="color: black;">
+      <!-- ✅ Real-time notification for user joining -->
+
+
+      <h4 id="modalPlaylistName"></h4> <!-- Playlist name shown here -->
+      <button id="userJoinNotification" style="display:none; color: lime; font-weight: bold; padding: 10px;"> </button>
+      <!-- Search bar and Add button container -->
+      <div style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center;">
+        <div style="position: relative; width: 300px;">
+          <input type="text" id="searchInput" placeholder="Search songs..." autocomplete="off" />
+          <ul id="suggestions"
+            style="list-style: none; margin: 0; padding: 0; position: absolute; width: 100%; background: white; border: 1px solid #ccc; display: none;">
+          </ul>
+        </div>
+        <button id="addSongButton" style="padding: 8px 16px; font-size: 16px; cursor: pointer;">
+          Add
+        </button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Song Title</th>
+            <th>Added By</th>
+          </tr>
+        </thead>
+        <tbody id="songsTableBody"></tbody>
+      </table>
+    </div>
   <div class="modal-footer">
-    <a href="#!" class="modal-close btn-flat pink-text">Close</a> <!-- Close button -->
+    <a href="#!" class="modal-close btn-flat pink-text">Close</a>
   </div>
-</div>
+
+
+  </div>
 
 
   <!-- Footer -->
@@ -154,9 +161,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-  
+
   <script src="../public/js/sidenave.js"></script>
   <script src="../public/js/playlistLiveRoom.js"></script>
+  
+
 </body>
 
 </html>
