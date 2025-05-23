@@ -13,7 +13,7 @@ router.delete('/remove/:songId', deleteSongById);
 router.get('/', cache('2 minutes'), getAllSongs); 
 router.get('/search-db', searchSongs);
 router.delete('/:songId', deleteSongById);
-router.get('/', getAllSongs); 
+// router.get('/', getAllSongs); 
 router.get('/:id', getSongByIdDB); 
 
 module.exports = router;
