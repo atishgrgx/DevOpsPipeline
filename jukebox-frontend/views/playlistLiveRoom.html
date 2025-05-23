@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../public/css/liveRoom.css" />
-    <script src="../public/js/authGuard.js"></script>
+  <script src="../public/js/authGuard.js"></script>
 </head>
 
 <body>
@@ -77,10 +77,10 @@
   </div>
   <div id="createPlaylistModal" class="modal">
     <div class="modal-content">
-      <h4>Create New Playlist</h4>
+      <h4>Create New Playlist</h4><br>
       <form id="createPlaylistForm">
         <div class="input-field">
-          <input id="playlistNameInput" type="text" required />
+          <input id="playlistNameInput" type="text" placeholder=" " required />
           <label for="playlistNameInput">Playlist Name</label>
         </div>
         <button class="btn waves-effect waves-light" type="submit">Create</button>
@@ -102,15 +102,14 @@
     </div>
   </div>
 
+
   <!-- Playlist Songs Modal -->
   <div id="playlistSongsModal" class="modal">
     <div class="modal-content" style="color: black;">
-      <!-- ✅ Real-time notification for user joining -->
+      <h4 id="modalPlaylistName" style="text-align: center; margin-bottom: 20px;"></h4>
+      <button id="userJoinNotification" style="display:none; color: lime; padding: 10px;"> </button>
 
-
-      <h4 id="modalPlaylistName"></h4> <!-- Playlist name shown here -->
-      <button id="userJoinNotification" style="display:none; color: lime; font-weight: bold; padding: 10px;"> </button>
-      <!-- Search bar and Add button container -->
+      <!-- Search bar and Add button -->
       <div style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center;">
         <div style="position: relative; width: 300px;">
           <input type="text" id="searchInput" placeholder="Search songs..." autocomplete="off" />
@@ -123,9 +122,11 @@
         </button>
       </div>
 
-      <table>
+      <!-- Songs Table -->
+      <table class="highlight">
         <thead>
           <tr>
+            <th>Image</th>
             <th>Song Title</th>
             <th>Added By</th>
           </tr>
@@ -133,11 +134,9 @@
         <tbody id="songsTableBody"></tbody>
       </table>
     </div>
-  <div class="modal-footer">
-    <a href="#!" class="modal-close btn-flat pink-text">Close</a>
-  </div>
-
-
+    <div class="modal-footer">
+      <a href="#!" class="modal-close btn pink">Close</a>
+    </div>
   </div>
 
 
@@ -164,7 +163,7 @@
 
   <script src="../public/js/sidenave.js"></script>
   <script src="../public/js/playlistLiveRoom.js"></script>
-  
+
 
 </body>
 

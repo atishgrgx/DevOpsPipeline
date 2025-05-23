@@ -6,7 +6,6 @@ const Song = require('../model/song');
 
 
 exports.getPlaylists = async (req, res) => {
-  console.log('✅ Test API hit');
   const playlists = await Playlist.find().sort({ createdAt: -1 });
   res.json(playlists);
 };
@@ -24,12 +23,12 @@ exports.createPlaylist = async (req, res) => {
   await playlist.save();
 
   // Emit globally since it's a new playlist created
- socketManager.getIO().emit('playlistCreated', playlist);
-console.log('⚡ Playlist added by', playlist.createdBy.username);
+  socketManager.getIO().emit('playlistCreated', playlist);
+  // console.log('⚡ Playlist added by', playlist.createdBy.username);
   res.status(201).json({ message: 'Playlist created', playlist });
 };
 
-// Need to check with varni to check song schema
+
 exports.addSong = async (req, res) => {
   const { playlistId } = req.params;
   const { songId, userId, username } = req.body;
@@ -41,7 +40,7 @@ exports.addSong = async (req, res) => {
   // Fetch song from Song collection
   const song = await Song.findById(songId);
   if (!song) return res.status(404).json({ message: 'Song not found in database.' });
-  console.log(song)
+
 
   //Check song is already added
   const songAlreadyExists = playlist.songs.some(s => String(s.songId) === String(song._id));
@@ -60,18 +59,15 @@ exports.addSong = async (req, res) => {
   });
 
   await playlist.save();
-
-  socketManager.getIO().to(`playlist-${playlistId}`).emit('songAdded', {
-    playlistId,
-    song: playlist.songs.at(-1)
-  });
+  socketManager.getIO()
+    .to(`playlist-${playlistId}`) // only people in the playlist room
+    .emit('songAdded', {
+      playlistId,
+      song: playlist.songs.at(-1)
+    });
 
   res.json({ message: 'Song added', playlist });
-  socketManager.on('connection', (socket) => {
-  socket.on('joinPlaylist', (playlistId) => {
-    socket.join(playlistId);
-  });
-});
+
 };
 
 

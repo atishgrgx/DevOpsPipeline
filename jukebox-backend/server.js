@@ -12,17 +12,9 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const server = http.createServer(app);
 
-// Setup Socket.IO
-const io = socketIO(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
-});
-
 // Use central socket manager
 const socketManager = require('./socket');
-socketManager.init(server); // Automatically hooks in collabPlaylist.js
+const io = socketManager.init(server); // Automatically hooks in collabPlaylist.js
 
 // Middleware order matters! ✅
 app.use(cors());
