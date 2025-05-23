@@ -1,12 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const { saveSongsFromFile, saveSongsByName, deleteSongById, getAllSongs, getSongByIdDB,getTopSongs } = require('../controller/songController.js');
+const apicache = require('apicache');
+
+let cache = apicache.middleware
 
 router.get('/save-from-file', saveSongsFromFile);
 router.get('/search/:songName', saveSongsByName);
 router.get('/top-songs', getTopSongs);
 router.delete('/remove/:songId', deleteSongById);
-router.get('/', getAllSongs); 
+router.get('/', cache('2 minutes'), getAllSongs); 
 router.get('/:id', getSongByIdDB); 
 
 module.exports = router;
