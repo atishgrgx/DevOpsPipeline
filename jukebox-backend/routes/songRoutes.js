@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { saveSongsFromFile, saveSongsByName, deleteSongById, getAllSongs, getSongByIdDB,getTopSongs } = require('../controller/songController.js');
+const { saveSongsFromFile, saveSongsByName, deleteSongById, getAllSongs, getSongByIdDB,getTopSongs, getTopArtists, searchSongs } = require('../controller/songController.js');
 const apicache = require('apicache');
 
 let cache = apicache.middleware
