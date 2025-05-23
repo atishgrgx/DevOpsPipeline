@@ -112,6 +112,20 @@ input::placeholder {
   color: #aaa;
 }
 
+textarea#regBio {
+  width: 90%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+  resize: vertical;
+  font-family: inherit;
+  color: #333;
+  background-color: white;
+}
+
 button {
   width: 90%;
   padding: 10px;

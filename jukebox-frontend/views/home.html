@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <script src="../public/js/authGuard.js"></script>
-    <title>Juke Box</title>
-    <!-- Link to external CSS -->
-    <link href="../public/css/home.css" rel="stylesheet">
-    <!-- Materialize CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="../public/js/authGuard.js"></script>
+  <script src="../public/js/logout.js"></script>
+  <title>Juke Box</title>
+  <link href="../public/css/home.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 </head>
 <body>
@@ -30,7 +29,7 @@
         <li><a href="./songrecommendation">SONG RECOMMENDATION</a></li>
         <li><a href="./playlist">PLAYLIST</a></li>
         <li><a href="./about">ABOUT</a></li>
-        <li><a href="./" onclick="sessionStorage.clear()">LOG-OUT</a></li>
+        <li><a href="#" id="logoutBtn">LOGOUT</a></li>
         <li id="adminTab" style="display: none;"><a href="./admin">Admin</a></li>
         <li>
           <a href="./profile" class="user left">
@@ -47,7 +46,7 @@
     <li><a href="./songrecommendation">SONG RECOMMENDATION</a></li>
     <li><a href="./playlist">PLAYLIST</a></li>
     <li><a href="./about">ABOUT</a></li>
-    <li><a href="./" onclick="sessionStorage.clear()">LOG-OUT</a></li>
+    <li><a href="#" id="logoutBtn">LOGOUT</a></li>
     <li id="adminTab" style="display: none;"><a href="./admin">Admin</a></li>
     <li>
       <a href="./profile">

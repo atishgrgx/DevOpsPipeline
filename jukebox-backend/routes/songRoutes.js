@@ -8,6 +8,7 @@ let cache = apicache.middleware
 router.get('/save-from-file', saveSongsFromFile);
 router.get('/search/:songName', saveSongsByName);
 router.get('/top-songs', getTopSongs);
+router.get('/top-artists', getTopArtists);
 router.delete('/remove/:songId', deleteSongById);
 router.get('/', cache('2 minutes'), getAllSongs); 
 router.get('/:id', getSongByIdDB); 
