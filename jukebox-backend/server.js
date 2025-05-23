@@ -31,6 +31,10 @@ const io = socketIO(server, {
   }
 });
 
+// Use central socket manager
+const socketManager = require('./socket');
+socketManager.init(server); // Automatically hooks in collabPlaylist.js
+
 // Middleware order matters! ✅
 app.use(cors());
 app.use(express.json());
@@ -42,7 +46,8 @@ app.use(session({
   saveUninitialized: true
 }));
 
-// MongoDB Connection
+
+// MongoDB
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -61,13 +66,16 @@ const adminRoutes = require('./routes/adminRoutes');
 const userListRoutes = require('./routes/userlistRoutes');
 const viewRoutes = require('./routes/viewRoutes');
 const playlistRoutes = require('./routes/playlistRoutes');
+const collabPlaylistRoutes = require('./routes/collabPlaylistRoutes');
 
+// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/songs', songRoutes);
 app.use('/api/users', userListRoutes);
 app.use('/api/users', adminRoutes);
 app.use('/api/playlists', playlistRoutes);
 app.use('/', viewRoutes);
+app.use('/api/playlist', collabPlaylistRoutes);
 
 // WebSocket Chat
 require('./socket/chat')(io);
