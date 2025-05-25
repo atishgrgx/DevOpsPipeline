@@ -379,3 +379,16 @@ nav {
     width: 90%;
   }
 }
+
+#toast-container {
+  top: 20%; /* or 50% for vertical center */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Make individual toasts larger and center the text */
+.toast {
+  font-size: 1.3rem;
+  text-align: center;
+  min-width: 250px;
+}

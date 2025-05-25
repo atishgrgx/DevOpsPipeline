@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   socket.on('userJoined', ({ userId, username, message }) => {
     // Show two toast notifications using Materialize CSS
-    M.toast({ html: `👤 User joined: ${username}`, displayLength: 3000 });
+    M.toast({ html: `👤 User joined: ${username}`, displayLength: 700 });
 
     // Update notification element if it exists
     const notifElem = document.getElementById("userJoinNotification");
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
   if (!email) {
-    M.toast({ html: 'You must be logged in.', displayLength: 3000 });
+    M.toast({ html: 'You must be logged in.', displayLength: 800 });
 
 
     window.location.href = '../views/login.html';
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         console.log(playlists)
         const playlist = playlists.find(p => p._id === playlistId);
         if (!playlist) {
-          M.toast({ html: 'Playlist not found.', displayLength: 3000 });
+          M.toast({ html: 'Playlist not found.', displayLength: 800 });
           return;
         }
 
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         tbody.innerHTML = '';
 
         if (playlist.songs.length === 0) {
-          M.toast({ html: 'Playlist Empty!', displayLength: 3000 });
+          M.toast({ html: 'Playlist Empty!', displayLength: 700 });
         } else {
           playlist.songs.forEach(song => {
             const tr = document.createElement('tr');
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         socket.emit('joinPlaylist', { playlistId, username, playlistName });
       } catch (err) {
         console.error('Failed to fetch playlist songs:', err);
-        M.toast({ html: 'Failed to load songs. Please try again later.', displayLength: 3000 });
+        M.toast({ html: 'Failed to load songs. Please try again later.', displayLength: 700 });
 
       }
     }
@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const imageFile = imageInput.files[0];  // grab the first selected file
 
     if (!name || !imageFile) {
-      M.toast({ html: 'Please provide both playlist name and an image.', displayLength: 3000 });
+      M.toast({ html: 'Please provide both playlist name and an image.', displayLength: 800 });
       return;
     }
 
@@ -247,11 +247,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         await fetchPlaylists(); // Refresh list
       } else {
         const errData = await res.json();
-        M.toast({ html: 'Failed to create playlist.', displayLength: 3000 });
+        M.toast({ html: 'Failed to create playlist.', displayLength: 800 });
       }
     } catch (err) {
       console.error('Error creating playlist:', err);
-      M.toast({ html: 'Error occurred. Check console.', displayLength: 3000 });
+      M.toast({ html: 'Error occurred. Check console.', displayLength: 800 });
     }
   });
   }
@@ -271,14 +271,14 @@ document.addEventListener('DOMContentLoaded', async function () {
       const playlistName = document.getElementById('modalPlaylistName').textContent;
 
       if (!searchInput || !playlistName) {
-        M.toast({ html: 'Please enter a song title and ensure a playlist is selected.', displayLength: 3000 });
+        M.toast({ html: 'Please enter a song title and ensure a playlist is selected.', displayLength: 800 });
         return;
       }
 
       try {
         const songId = localStorage.getItem(`selectedSong`) // you need to implement this
         if (!songId) {
-          M.toast({ html: 'Song not found.', displayLength: 3000 });
+          M.toast({ html: 'Song not found.', displayLength: 800 });
           return;
         }
         // Get current user info
@@ -298,7 +298,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const data = await res.json();
 
         if (res.ok) {
-          M.toast({ html: 'Song added successfully!', displayLength: 3000 });
+          M.toast({ html: 'Song added successfully!', displayLength: 800 });
           document.getElementById('searchInput').value = '';
 
           // Refresh playlist songs in modal
