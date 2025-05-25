@@ -6,10 +6,10 @@ module.exports = (io, socket) => {
 
   socket.emit('welcome', '👋 Welcome to the Jukebox socket server!');
 
-  socket.on('joinPlaylist', ({playlistId,username} ) => {
+  socket.on('joinPlaylist', ({playlistId,username,playlistName} ) => {
     socket.join(`playlist-${playlistId}`);
     userMap[socket.id] = username;
-
+     console.log(`⚡ User ${username} joined playlist - ${playlistName} `);
     // Emit to others in the room that a new user joined
     socket.to(`playlist-${playlistId}`).emit('userJoined', {
       userId: socket.id, // or user name if you track it

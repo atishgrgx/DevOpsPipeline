@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       try {
         const res = await fetch('http://localhost:3000/api/playlist/all');
         const playlists = await res.json();
+        console.log(playlists)
         const playlist = playlists.find(p => p._id === playlistId);
         if (!playlist) {
          M.toast({ html: 'Playlist not found.', displayLength: 3000 });
@@ -121,7 +122,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         // Show playlist name
         document.getElementById('modalPlaylistName').textContent = playlist.name;
-
+        const playlistName = playlist.name
         // Fill table
         const tbody = document.getElementById('songsTableBody');
         tbody.innerHTML = '';
@@ -144,7 +145,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         playlistSongsModal.open();
-        socket.emit('joinPlaylist', { playlistId, username });
+        socket.emit('joinPlaylist', { playlistId, username , playlistName});
       } catch (err) {
         console.error('Failed to fetch playlist songs:', err);
          M.toast({ html: 'Failed to load songs. Please try again later.', displayLength: 3000 });
