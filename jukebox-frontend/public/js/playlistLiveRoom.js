@@ -14,15 +14,16 @@ socket.on("playlistCreated", (playlist) => {
     const col = document.createElement('div');
     col.className = 'col s12 m6 l4';
     col.innerHTML = `
-      <div class="card black">
-        <div class="card-content white-text">
-          <span class="card-title">${playlist.name}</span>
-          <p>Created By: ${playlist.createdBy.username}</p>
+     <div class="card black">
+              <div class="card-content playlist-card-content white-text">
+                <img src="${playlist.imageUrl}" alt="Playlist Image" class="playlist-image" />
+                <h5 class="playlist-title">${playlist.name}</h5>
+                <p class="playlist-creator">Created By: ${playlist.createdBy.username}</p>
+              </div>
+              <div class="card-action center-align">
+                <a href="#" class="join-playlist-btn pink-text" data-id="${playlist._id}">Join</a>
+              </div>
         </div>
-        <div class="card-action">
-          <a href="#" class="join-playlist-btn pink-text" data-id="${playlist._id}">Join</a>
-        </div>
-      </div>
     `;
     playlistListContainer.appendChild(col);
   }
@@ -105,9 +106,19 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   playlistListContainer.addEventListener('click', async function (e) {
     const playlistSongsModalElem = document.getElementById('playlistSongsModal');
-    const playlistSongsModal = M.Modal.init(playlistSongsModalElem);
+   const playlistSongsModal = M.Modal.init(playlistSongsModalElem, {
+  onCloseEnd: () => {
+    const playlistId = localStorage.getItem('currentPlaylistId');
+    const playlistName = document.getElementById('modalPlaylistName').textContent;
+    const username = sessionStorage.getItem('userName') || 'Guest';
 
-
+    if (playlistId) {
+      socket.emit('leavePlaylist', { playlistId, username, playlistName });
+      localStorage.removeItem('currentPlaylistId');
+      console.log(`You left playlist: ${playlistName}`);
+    }
+  }
+});
     const username = sessionStorage.getItem('userName') || 'Guest'
     if (e.target.classList.contains('join-playlist-btn')) {
       e.preventDefault();
