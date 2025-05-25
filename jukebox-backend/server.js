@@ -17,8 +17,8 @@ const server = http.createServer(app);
 
 // setting limiter 
 const limiter = rateLimit({
-  windowMs: 10 * 60 * 1000, // 10 min
-  max: 50
+  windowMs: 1 * 60 * 1000, // 1 min
+  max: 5000
 })
 app.use(limiter)
 app.set('trust proxy', 1)

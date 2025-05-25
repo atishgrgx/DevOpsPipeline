@@ -62,12 +62,12 @@ function createCard(item, type) {
   button.textContent = 'Explore';
   button.classList.add('explore-button');
   button.addEventListener('click', () => {
-  const matched = allPlaylists.find(p => p.playlist_name === item.title);
-  if (!matched) return;
+    const matched = allPlaylists.find(p => p.playlist_name === item.title);
+    if (!matched) return;
 
-  playlistSongs = matched.songs;
-  openPlaylistModal(matched); 
-});
+    playlistSongs = matched.songs;
+    openPlaylistModal(matched);
+  });
   content.appendChild(button);
 
   card.appendChild(content);
@@ -197,22 +197,22 @@ function renderPlaylistSongs() {
   // Attach remove event to each button
   const removeButtons = document.querySelectorAll('.remove-button');
   removeButtons.forEach(button => {
-  button.addEventListener('click', async (e) => {
-    const songIndex = parseInt(e.target.getAttribute('data-index'), 10);
-    const songToRemove = playlistSongs[songIndex];
+    button.addEventListener('click', async (e) => {
+      const songIndex = parseInt(e.target.getAttribute('data-index'), 10);
+      const songToRemove = playlistSongs[songIndex];
 
-    if (!songToRemove?.track_id) {
-      alert('Song ID missing, cannot remove');
-      return;
-    }
+      if (!songToRemove?.track_id) {
+        alert('Song ID missing, cannot remove');
+        return;
+      }
 
-    const updatedPlaylist = await removeSong(currentPlaylistId, songToRemove.track_id);
-    if (updatedPlaylist) {
-      playlistSongs = updatedPlaylist.songs;
-      renderPlaylistSongs();
-    }
+      const updatedPlaylist = await removeSong(currentPlaylistId, songToRemove.track_id);
+      if (updatedPlaylist) {
+        playlistSongs = updatedPlaylist.songs;
+        renderPlaylistSongs();
+      }
+    });
   });
-});
 }
 
 async function removeSong(playlistId, songId) {
@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       await deletePlaylist(currentPlaylistId);
       closePlaylistModal();
-    }); 
+    });
   }
 });
 
@@ -270,7 +270,7 @@ async function deletePlaylist(playlistId) {
     window.location.reload();
   } catch (error) {
     console.error('Error deleting playlist:', error);
-    alert('Failed to delete playlist'); 
+    alert('Failed to delete playlist');
   }
 }
 
@@ -279,37 +279,37 @@ const playlistNameInput = document.getElementById('playlist-name');
 playlistNameInput.addEventListener('keypress', async (event) => {
   if (event.key === 'Enter') {
     event.preventDefault();
-    
+
     const newName = playlistNameInput.value.trim();
     if (!newName) {
       alert('Playlist name cannot be empty');
       return;
     }
-    
+
     if (!currentPlaylistId) {
       alert('No playlist selected');
       return;
     }
-    
+
     try {
       const response = await fetch(`http://127.0.0.1:3000/api/playlists/${currentPlaylistId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ playlist_name: newName }),
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to update playlist name');
       }
-      
+
       const updatedPlaylist = await response.json();
       // Update local data
       const index = allPlaylists.findIndex(p => p._id === currentPlaylistId);
       if (index !== -1) {
         allPlaylists[index].playlist_name = updatedPlaylist.playlist_name;
       }
-      
+
       window.location.reload();
     } catch (error) {
       console.error(error);
