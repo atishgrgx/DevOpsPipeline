@@ -9,7 +9,7 @@ module.exports = (io, socket) => {
   socket.on('joinPlaylist', ({playlistId,username,playlistName} ) => {
     socket.join(`playlist-${playlistId}`);
     userMap[socket.id] = username;
-     console.log(`⚡ User ${username} joined playlist - ${playlistName} `);
+     console.log(`✅ User ${username} joined playlist - ${playlistName} `);
     // Emit to others in the room that a new user joined
     socket.to(`playlist-${playlistId}`).emit('userJoined', {
       userId: socket.id, // or user name if you track it
@@ -25,7 +25,7 @@ module.exports = (io, socket) => {
 socket.on('songAdded', ({ playlistId, song }) => {
     socket.join(`playlist-${playlistId}`);
     userMap[socket.id] = song.addedBy.username;
-    console.log(`⚡ ${song.title} added by ${song.addedBy.username}`);
+    console.log(`🎶➕ song    ${song.title} added by ${song.addedBy.username}`);
     // Broadcast to all clients in the playlist room
     io.to(`playlist-${playlistId}`).emit('songAdded', { playlistId, song });
 });
@@ -39,7 +39,7 @@ socket.on('leavePlaylist', ({ playlistId, username, playlistName }) => {
 
   socket.on('disconnect', () => {
     const username = userMap[socket.id];
-    console.log(`🚪 Socket disconnected: ${socket.id} (${username || 'Unknown user'})`);
+    console.log(`🔒 Socket disconnected: ${socket.id} (${username || 'Unknown user'})`);
     delete userMap[socket.id];
   });
 };
