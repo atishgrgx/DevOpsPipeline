@@ -11,8 +11,15 @@ exports.getPlaylists = async (req, res) => {
 };
 
 exports.createPlaylist = async (req, res) => {
-  const { name, imageUrl, userId, username } = req.body;
+  const { name, userId, username } = req.body;
+  const imageFile = req.file;
 
+   if (!imageFile) {
+    return res.status(400).json({ message: 'Image is required' });
+  }
+
+ const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${imageFile.filename}`;
+  
   const playlist = new Playlist({
     name,
     imageUrl,
@@ -22,9 +29,13 @@ exports.createPlaylist = async (req, res) => {
 
   await playlist.save();
 
-  // Emit globally since it's a new playlist created
-  socketManager.getIO().emit('playlistCreated', playlist);
-  // console.log('⚡ Playlist added by', playlist.createdBy.username);
+  // Emit with full image URL for socket clients
+const fullImageUrl = `http://localhost:3000${imageUrl}`;
+const playlistData = playlist.toObject();
+playlistData.imageUrl = fullImageUrl;
+
+console.log(`🎧 Playlist ${playlist.name} is added by ${username}`);
+ socketManager.getIO().emit('playlistCreated', playlist);
   res.status(201).json({ message: 'Playlist created', playlist });
 };
 
@@ -80,7 +91,8 @@ exports.removeSong = async (req, res) => {
 
   if (String(playlist.createdBy.userId) !== userId)
     return res.status(403).json({ message: 'Only the creator can remove songs' });
-  if (String(playlist.songs.songId) !== songId)
+  const songExists = playlist.songs.some(song => String(song.songId) === String(songId));
+  if (!songExists)
     return res.status(403).json({ message: 'song not found' });
 
   playlist.songs = playlist.songs.filter(song => song.songId !== songId);
@@ -92,7 +104,6 @@ exports.removeSong = async (req, res) => {
   res.json({ message: 'Song removed', playlist });
 };
 
-// Need to check with varni bcz playlist model is not exsit
 exports.savePlaylistToUser = async (req, res) => {
   const { playlistId } = req.params;
   const { userId } = req.body;
@@ -101,7 +112,7 @@ exports.savePlaylistToUser = async (req, res) => {
   if (!playlist) return res.status(404).json({ message: 'Playlist not found' });
 
   const userPlaylist = new UserPlaylist({
-    userId,
+    userId: userId,
     playlist_name: playlist.playlist_name || playlist.name || 'Untitled Playlist',
     songs: playlist.songs.map(song => ({
       track_id: song.track_id || song.songId || '', // fallback if needed
@@ -119,3 +130,5 @@ exports.savePlaylistToUser = async (req, res) => {
 
   res.json({ message: 'Playlist saved', userPlaylist });
 };
+
+console.log('getPlaylists function exported:', exports.getPlaylists);

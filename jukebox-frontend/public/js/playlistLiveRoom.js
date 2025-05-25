@@ -14,15 +14,16 @@ socket.on("playlistCreated", (playlist) => {
     const col = document.createElement('div');
     col.className = 'col s12 m6 l4';
     col.innerHTML = `
-      <div class="card black">
-        <div class="card-content white-text">
-          <span class="card-title">${playlist.name}</span>
-          <p>Created By: ${playlist.createdBy.username}</p>
+     <div class="card black">
+              <div class="card-content playlist-card-content white-text">
+                <img src="${playlist.imageUrl}" alt="Playlist Image" class="playlist-image" />
+                <h5 class="playlist-title">${playlist.name}</h5>
+                <p class="playlist-creator">Created By: ${playlist.createdBy.username}</p>
+              </div>
+              <div class="card-action center-align">
+                <a href="#" class="join-playlist-btn pink-text" data-id="${playlist._id}">Join</a>
+              </div>
         </div>
-        <div class="card-action">
-          <a href="#" class="join-playlist-btn pink-text" data-id="${playlist._id}">Join</a>
-        </div>
-      </div>
     `;
     playlistListContainer.appendChild(col);
   }
@@ -49,15 +50,16 @@ document.addEventListener('DOMContentLoaded', async function () {
       // Hide notification after 10 seconds
       setTimeout(() => {
         notifElem.style.display = "none";
-      }, 60000);
+      }, 5000);
     }
   });
 
 
-  if (!email) {
-         M.toast({ html: 'You must be logged in.', displayLength: 3000 });
 
-  
+  if (!email) {
+    M.toast({ html: 'You must be logged in.', displayLength: 3000 });
+
+
     window.location.href = '../views/login.html';
     return;
   }
@@ -96,15 +98,27 @@ document.addEventListener('DOMContentLoaded', async function () {
 <td style="font-weight: bold;">${song.title}</td> 
 <td style="font-weight: bold;">${song.addedBy.username}</td>`;
     tbody.appendChild(tr);
-
+    socket.emit('songAdded', { currentPlaylistId, song });
+    console.log(`${song.title} added by ${song.addedBy.username}`)
   });
 
+ 
 
   playlistListContainer.addEventListener('click', async function (e) {
     const playlistSongsModalElem = document.getElementById('playlistSongsModal');
-    const playlistSongsModal = M.Modal.init(playlistSongsModalElem);
+   const playlistSongsModal = M.Modal.init(playlistSongsModalElem, {
+  onCloseEnd: () => {
+    const playlistId = localStorage.getItem('currentPlaylistId');
+    const playlistName = document.getElementById('modalPlaylistName').textContent;
+    const username = sessionStorage.getItem('userName') || 'Guest';
 
-
+    if (playlistId) {
+      socket.emit('leavePlaylist', { playlistId, username, playlistName });
+      localStorage.removeItem('currentPlaylistId');
+      console.log(`You left playlist: ${playlistName}`);
+    }
+  }
+});
     const username = sessionStorage.getItem('userName') || 'Guest'
     if (e.target.classList.contains('join-playlist-btn')) {
       e.preventDefault();
@@ -113,15 +127,16 @@ document.addEventListener('DOMContentLoaded', async function () {
       try {
         const res = await fetch('http://localhost:3000/api/playlist/all');
         const playlists = await res.json();
+        console.log(playlists)
         const playlist = playlists.find(p => p._id === playlistId);
         if (!playlist) {
-         M.toast({ html: 'Playlist not found.', displayLength: 3000 });
+          M.toast({ html: 'Playlist not found.', displayLength: 3000 });
           return;
         }
 
         // Show playlist name
         document.getElementById('modalPlaylistName').textContent = playlist.name;
-
+        const playlistName = playlist.name
         // Fill table
         const tbody = document.getElementById('songsTableBody');
         tbody.innerHTML = '';
@@ -144,11 +159,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         playlistSongsModal.open();
-        socket.emit('joinPlaylist', { playlistId, username });
+        socket.emit('joinPlaylist', { playlistId, username, playlistName });
       } catch (err) {
         console.error('Failed to fetch playlist songs:', err);
-         M.toast({ html: 'Failed to load songs. Please try again later.', displayLength: 3000 });
-        
+        M.toast({ html: 'Failed to load songs. Please try again later.', displayLength: 3000 });
+
       }
     }
 
@@ -173,21 +188,22 @@ document.addEventListener('DOMContentLoaded', async function () {
           option.textContent = p.name;
           playlistSelect.appendChild(option);
         }
+          const col = document.createElement('div');
+          col.className = 'col s12 m6 l4';
+          col.innerHTML = `
+            <div class="card black">
+              <div class="card-content playlist-card-content white-text">
+                <img src="${p.imageUrl}" alt="Playlist Image" class="playlist-image" />
+                <h5 class="playlist-title">${p.name}</h5>
+                <p class="playlist-creator">Created By: ${p.createdBy.username}</p>
+              </div>
+              <div class="card-action center-align">
+                <a href="#" class="join-playlist-btn pink-text" data-id="${p._id}">Join</a>
+              </div>
+            </div>
+          `;
+          playlistListContainer.appendChild(col);
 
-        const col = document.createElement('div');
-        col.className = 'col s12 m6 l4';
-        col.innerHTML = `
-          <div class="card black">
-            <div class="card-content white-text">
-              <span class="card-title">${p.name}</span>
-              <p>Created By: ${p.createdBy.username}</p>
-            </div>
-            <div class="card-action">
-              <a href="#" class="join-playlist-btn pink-text" data-id="${p._id}">Join</a>
-            </div>
-          </div>
-        `;
-        playlistListContainer.appendChild(col);
       });
 
       M.FormSelect.init(playlistSelect);
@@ -197,39 +213,47 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
   async function handleCreatePlaylist() {
-    const form = document.getElementById('createPlaylistForm');
-    if (!form) return;
+     const form = document.getElementById('createPlaylistForm');
+  if (!form) return;
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-      const input = document.getElementById('playlistNameInput');
-      const name = input.value.trim();
+    const nameInput = document.getElementById('playlistNameInput');
+    const imageInput = document.getElementById('playlistImageInput');
+    const name = nameInput.value.trim();
+    const imageFile = imageInput.files[0];  // grab the first selected file
 
-      if (!name) return;
+    if (!name || !imageFile) {
+      M.toast({ html: 'Please provide both playlist name and an image.', displayLength: 3000 });
+      return;
+    }
 
-      try {
-        const res = await fetch('http://localhost:3000/api/playlist/create', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username, email, name }),
-        });
+    try {
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('username', username);  // make sure username is defined somewhere
+      formData.append('image', imageFile);
 
-        if (res.ok) {
-          input.value = '';
-          M.Modal.getInstance(document.getElementById('createPlaylistModal')).close();
-          await fetchPlaylists(); // Refresh list
-        } else {
-          const errData = await res.json();
-         M.toast({ html: 'Failed to create playlist.', displayLength: 3000 });
+      const res = await fetch('http://localhost:3000/api/playlist/create', {
+        method: 'POST',
+        body: formData,
+      });
 
-        }
-      } catch (err) {
-        console.error('Error creating playlist:', err);
+      if (res.ok) {
+        nameInput.value = '';
+        imageInput.value = '';
+        M.Modal.getInstance(document.getElementById('createPlaylistModal')).close();
+        await fetchPlaylists(); // Refresh list
+      } else {
+        const errData = await res.json();
+        M.toast({ html: 'Failed to create playlist.', displayLength: 3000 });
       }
-    });
+    } catch (err) {
+      console.error('Error creating playlist:', err);
+      M.toast({ html: 'Error occurred. Check console.', displayLength: 3000 });
+    }
+  });
   }
 
   const addSongToPlaylist = async () => {
@@ -247,14 +271,14 @@ document.addEventListener('DOMContentLoaded', async function () {
       const playlistName = document.getElementById('modalPlaylistName').textContent;
 
       if (!searchInput || !playlistName) {
-         M.toast({ html: 'Please enter a song title and ensure a playlist is selected.', displayLength: 3000 });
+        M.toast({ html: 'Please enter a song title and ensure a playlist is selected.', displayLength: 3000 });
         return;
       }
 
       try {
         const songId = localStorage.getItem(`selectedSong`) // you need to implement this
         if (!songId) {
-         M.toast({ html: 'Song not found.', displayLength: 3000 });
+          M.toast({ html: 'Song not found.', displayLength: 3000 });
           return;
         }
         // Get current user info

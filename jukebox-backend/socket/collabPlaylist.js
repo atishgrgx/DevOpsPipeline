@@ -6,10 +6,10 @@ module.exports = (io, socket) => {
 
   socket.emit('welcome', '👋 Welcome to the Jukebox socket server!');
 
-  socket.on('joinPlaylist', ({playlistId,username} ) => {
+  socket.on('joinPlaylist', ({playlistId,username,playlistName} ) => {
     socket.join(`playlist-${playlistId}`);
     userMap[socket.id] = username;
-
+     console.log(`⚡ User ${username} joined playlist - ${playlistName} `);
     // Emit to others in the room that a new user joined
     socket.to(`playlist-${playlistId}`).emit('userJoined', {
       userId: socket.id, // or user name if you track it
@@ -22,19 +22,20 @@ module.exports = (io, socket) => {
     }
   });
 
-  socket.on('leavePlaylist', (playlistId) => {
-    socket.leave(`playlist-${playlistId}`);
-    console.log(`❌ ${socket.id} left playlist-${playlistId}`);
-  });
+socket.on('songAdded', ({ playlistId, song }) => {
+    socket.join(`playlist-${playlistId}`);
+    userMap[socket.id] = song.addedBy.username;
+    console.log(`⚡ ${song.title} added by ${song.addedBy.username}`);
+    // Broadcast to all clients in the playlist room
+    io.to(`playlist-${playlistId}`).emit('songAdded', { playlistId, song });
+});
 
-  // socket.on('newSong', ({ playlistId, song }) => {
-  //   if (!playlists[playlistId]) {
-  //     playlists[playlistId] = [];
-  //   }
-  //   playlists[playlistId].push(song);
-  //   io.to(`playlist-${playlistId}`).emit('updatePlaylist', playlists[playlistId]);
-  //   console.log(`🎵 New song added to playlist-${playlistId}:`, song);
-  // });
+
+socket.on('leavePlaylist', ({ playlistId, username, playlistName }) => {
+  socket.leave(`playlist-${playlistId}`);
+  userMap[socket.id] = username;
+    console.log(`❌ User ${username} left playlist - ${playlistName}`);
+});
 
   socket.on('disconnect', () => {
     const username = userMap[socket.id];
