@@ -168,48 +168,48 @@ function closePlaylistModal() {
 
 // Dummy playlist songs (you'll pull from real data later)
 const playlistSongs = [
-  {
-    title: 'Adiye – From “Bachelor”',
-    artist: 'Dhibu Ninan Thomas',
-    album: 'Adiye (From “Bachelor”)',
-    duration: '4:32',
-    image: '../public/images/play 6.png'
-  },
-  {
-    title: 'Adiye – From “Bachelor”',
-    artist: 'Dhibu Ninan Thomas',
-    album: 'Adiye (From “Bachelor”)',
-    duration: '4:32',
-    image: '../public/images/song 1.png'
-  },
-  {
-    title: 'Adiye – From “Bachelor”',
-    artist: 'Dhibu Ninan Thomas',
-    album: 'Adiye (From “Bachelor”)',
-    duration: '4:32',
-    image: '../public/images/song 1.png'
-  },
-  {
-    title: 'Adiye – From “Bachelor”',
-    artist: 'Dhibu Ninan Thomas',
-    album: 'Adiye (From “Bachelor”)',
-    duration: '4:32',
-    image: '../public/images/song 1.png'
-  },
-  {
-    title: 'Adiye – From “Bachelor”',
-    artist: 'Dhibu Ninan Thomas',
-    album: 'Adiye (From “Bachelor”)',
-    duration: '4:32',
-    image: '../public/images/song 1.png'
-  },
-  {
-    title: 'Adiye – From “Bachelor”',
-    artist: 'Dhibu Ninan Thomas',
-    album: 'Adiye (From “Bachelor”)',
-    duration: '4:32',
-    image: '../public/images/song 1.png'
-  },
+  // {
+  //   title: 'Adiye – From “Bachelor”',
+  //   artist: 'Dhibu Ninan Thomas',
+  //   album: 'Adiye (From “Bachelor”)',
+  //   duration: '4:32',
+  //   image: '../public/images/play 6.png'
+  // },
+  // {
+  //   title: 'Adiye – From “Bachelor”',
+  //   artist: 'Dhibu Ninan Thomas',
+  //   album: 'Adiye (From “Bachelor”)',
+  //   duration: '4:32',
+  //   image: '../public/images/song 1.png'
+  // },
+  // {
+  //   title: 'Adiye – From “Bachelor”',
+  //   artist: 'Dhibu Ninan Thomas',
+  //   album: 'Adiye (From “Bachelor”)',
+  //   duration: '4:32',
+  //   image: '../public/images/song 1.png'
+  // },
+  // {
+  //   title: 'Adiye – From “Bachelor”',
+  //   artist: 'Dhibu Ninan Thomas',
+  //   album: 'Adiye (From “Bachelor”)',
+  //   duration: '4:32',
+  //   image: '../public/images/song 1.png'
+  // },
+  // {
+  //   title: 'Adiye – From “Bachelor”',
+  //   artist: 'Dhibu Ninan Thomas',
+  //   album: 'Adiye (From “Bachelor”)',
+  //   duration: '4:32',
+  //   image: '../public/images/song 1.png'
+  // },
+  // {
+  //   title: 'Adiye – From “Bachelor”',
+  //   artist: 'Dhibu Ninan Thomas',
+  //   album: 'Adiye (From “Bachelor”)',
+  //   duration: '4:32',
+  //   image: '../public/images/song 1.png'
+  // },
   // Add more songs as needed...
 ];
 
@@ -368,7 +368,6 @@ document.addEventListener('DOMContentLoaded', () => {
         duration: song.duration,
         image: song.image
       }));
-      alert(JSON.stringify(songsPayload));
       try {
         const response = await fetch('http://127.0.0.1:3000/api/playlists', {
           method: 'POST',
@@ -386,7 +385,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         alert('Playlist created successfully');
         playlistNameInput.value = '';  // clear input
-        window.location.href = 'playlist.html';
       } catch (error) {
         console.error('Error creating playlist:', error);
         alert('Failed to create playlist');
