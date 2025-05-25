@@ -8,9 +8,28 @@ const http = require('http');
 const socketIO = require('socket.io');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
+const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
 
 const app = express();
 const server = http.createServer(app);
+
+// setting limiter 
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 min
+  max: 50
+})
+app.use(limiter)
+app.set('trust proxy', 1)
+
+// Setup Socket.IO
+const io = socketIO(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
 
 // Use central socket manager
 const socketManager = require('./socket');
@@ -54,7 +73,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/songs', songRoutes);
 app.use('/api/users', userListRoutes);
 app.use('/api/users', adminRoutes);
-app.use('/api/playlists', playlistRoutes); 
+app.use('/api/playlists', playlistRoutes);
 app.use('/', viewRoutes);
 app.use('/api/playlist', collabPlaylistRoutes);
 
@@ -66,6 +85,25 @@ app.use(express.static(path.join(__dirname, '../jukebox-frontend')));
 
 // Start server
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+
+if (cluster.isMaster) {
+  console.log(`Master ${process.pid} is running`);
+
+  // Fork workers for each CPU
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`Worker ${worker.process.pid} died`);
+    cluster.fork();
+  });
+} else {
+  server.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+  });
+}
+
+// server.listen(PORT, () => {
+//   console.log(`Server running at http://localhost:${PORT}`);
+// });
