@@ -33,7 +33,7 @@ const io = socketIO(server, {
 
 // Use central socket manager
 const socketManager = require('./socket');
-socketManager.init(server); // Automatically hooks in collabPlaylist.js
+const io = socketManager.init(server); // Automatically hooks in collabPlaylist.js
 
 // Middleware order matters! ✅
 app.use(cors());
