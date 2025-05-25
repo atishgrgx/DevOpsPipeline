@@ -16,12 +16,12 @@ const app = express();
 const server = http.createServer(app);
 
 // setting limiter 
-const limiter = rateLimit({
-  windowMs: 10 * 60 * 1000, // 10 min
-  max: 50
-})
-app.use(limiter)
-app.set('trust proxy', 1)
+// const limiter = rateLimit({
+//   windowMs: 10 * 60 * 1000, // 10 min
+//   max: 50
+// })
+// app.use(limiter)
+// app.set('trust proxy', 1)
 
 // Setup Socket.IO
 const io = socketIO(server, {
@@ -86,24 +86,24 @@ app.use(express.static(path.join(__dirname, '../jukebox-frontend')));
 // Start server
 const PORT = process.env.PORT || 3000;
 
-if (cluster.isMaster) {
-  console.log(`Master ${process.pid} is running`);
+// if (cluster.isMaster) {
+//   console.log(`Master ${process.pid} is running`);
 
-  // Fork workers for each CPU
-  for (let i = 0; i < numCPUs; i++) {
-    cluster.fork();
-  }
+//   // Fork workers for each CPU
+//   for (let i = 0; i < numCPUs; i++) {
+//     cluster.fork();
+//   }
 
-  cluster.on('exit', (worker, code, signal) => {
-    console.log(`Worker ${worker.process.pid} died`);
-    cluster.fork();
-  });
-} else {
-  server.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-  });
-}
+//   cluster.on('exit', (worker, code, signal) => {
+//     console.log(`Worker ${worker.process.pid} died`);
+//     cluster.fork();
+//   });
+// } else {
+//   server.listen(PORT, () => {
+//     console.log(`Server running at http://localhost:${PORT}`);
+//   });
+// }
 
-// server.listen(PORT, () => {
-//   console.log(`Server running at http://localhost:${PORT}`);
-// });
+server.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
