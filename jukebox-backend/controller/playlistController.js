@@ -70,3 +70,20 @@ exports.updatePlaylistName = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.createPlaylist = async (req, res) => {
+  const { playlist_name, songs } = req.body;
+
+  if (!playlist_name || !songs || !Array.isArray(songs)) {
+    return res.status(400).json({ message: 'Invalid playlist data' });
+  }
+
+  try {
+    const newPlaylist = new Playlist({ playlist_name, songs });
+    await newPlaylist.save();
+    res.status(201).json({ message: 'Playlist created successfully', playlist: newPlaylist });
+  } catch (error) {
+    console.error('Error creating playlist:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

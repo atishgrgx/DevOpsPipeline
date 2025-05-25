@@ -4,6 +4,7 @@ from recom_by_playlist import PlaylistRecommender  # Different logic, same datas
 from flask import jsonify
 from flask_cors import CORS
 from pymongo import MongoClient
+import re
 
 app = Flask(__name__)
 CORS(app)
@@ -14,6 +15,17 @@ playlist_recommender = PlaylistRecommender('jukebox-backend/recom_model/filtered
 client = MongoClient("mongodb+srv://dhanushsoma17:dhanushsoma17@jukeboxdb.v158hmf.mongodb.net/")
 db = client['JUKEBOXDB']
 collection = db['songs']
+
+def clean_song(song):
+    if 'artists' in song:
+        for artist in song['artists']:
+            artist.pop('_id', None)
+    if 'album' in song:
+        album = song['album']
+        album.pop('_id', None)
+        if 'images' in album and album['images']:
+            album['images'][0].pop('_id', None)  # only remove from first image
+    return song
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -71,13 +83,32 @@ def get_song_details():
     results = []
     for song in songs:
         results.append({
+            'track_id': song.get('songId', 'Unknown'),
             'title': song.get('name', 'Unknown'),
             'artist': ', '.join(artist['name'] for artist in song.get('artists', [])),
             'album': song.get('album', {}).get('name', 'Unknown'),
             'duration': f"{song['duration_ms'] // 60000}:{str((song['duration_ms'] % 60000) // 1000).zfill(2)}" if 'duration_ms' in song else '3:30',
             'image': song.get('album', {}).get('images', [{}])[0].get('url', '')  # largest image
         })
+    print("Results:", results)
     return jsonify(results)
 
+@app.route('/api/search_songs')
+def search_songs():
+    query = request.args.get('q', '')
+    if not query:
+        return jsonify([])
+
+    regex = re.compile(f"^{re.escape(query)}", re.IGNORECASE)
+    matches = collection.find(
+    {"$or": [{"name": regex}, {"artists.name": regex}]},
+    {"_id": 0, "name": 1, "artists.name": 1, "album.name": 1, "album.images": {"$slice": 1}, "duration_ms": 1, 'songId': 1}
+    ).sort("popularity", -1
+    ).limit(10)
+    
+    results = [clean_song(song) for song in matches]
+
+    return jsonify(results)
+    
 if __name__ == '__main__':
     app.run(debug=True)
