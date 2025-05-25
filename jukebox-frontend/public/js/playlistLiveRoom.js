@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 <p class="playlist-creator">Created By: ${p.createdBy.username}</p>
               </div>
               <div class="card-action center-align">
-                <a href="#" class="join-playlist-btn pink-text" data-id="${p._id}">Join</a>
+                <a href="#" class="join-playlist-btn pink-text" data-id="${p._id}">Join Room</a>
               </div>
             </div>
           `;
