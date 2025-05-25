@@ -15,6 +15,14 @@ const numCPUs = require('os').cpus().length;
 const app = express();
 const server = http.createServer(app);
 
+// setting limiter 
+// const limiter = rateLimit({
+//   windowMs: 10 * 60 * 1000, // 10 min
+//   max: 50
+// })
+// app.use(limiter)
+// app.set('trust proxy', 1)
+
 // Use central socket manager
 const socketManager = require('./socket');
 const io = socketManager.init(server); // Automatically hooks in collabPlaylist.js
