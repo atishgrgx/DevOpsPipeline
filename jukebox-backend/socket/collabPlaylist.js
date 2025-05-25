@@ -31,19 +31,11 @@ socket.on('songAdded', ({ playlistId, song }) => {
 });
 
 
-  socket.on('leavePlaylist', (playlistId) => {
-    socket.leave(`playlist-${playlistId}`);
-    console.log(`❌ ${socket.id} left playlist-${playlistId}`);
-  });
-
-  // socket.on('newSong', ({ playlistId, song }) => {
-  //   if (!playlists[playlistId]) {
-  //     playlists[playlistId] = [];
-  //   }
-  //   playlists[playlistId].push(song);
-  //   io.to(`playlist-${playlistId}`).emit('updatePlaylist', playlists[playlistId]);
-  //   console.log(`🎵 New song added to playlist-${playlistId}:`, song);
-  // });
+socket.on('leavePlaylist', ({ playlistId, username, playlistName }) => {
+  socket.leave(`playlist-${playlistId}`);
+  userMap[socket.id] = username;
+    console.log(`❌ User ${username} left playlist - ${playlistName}`);
+});
 
   socket.on('disconnect', () => {
     const username = userMap[socket.id];

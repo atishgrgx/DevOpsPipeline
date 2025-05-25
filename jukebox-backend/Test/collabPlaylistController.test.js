@@ -35,16 +35,19 @@ describe('createPlaylist', () => {
   });
 
   it('should create a new playlist, emit socket event, and return 201 with playlist', async () => {
-    // Mock request body
     const validObjectId = '66510d6e7a2bc6e5f52a1225';
 
     const req = {
       body: {
         name: 'My Playlist',
-        imageUrl: 'http://image.url/img.png',
         userId: new mongoose.Types.ObjectId(validObjectId),
         username: 'testuser'
-      }
+      },
+      file: {
+        filename: 'img.png'
+      },
+      protocol: 'http',
+      get: sinon.stub().withArgs('host').returns('localhost:3000')
     };
 
     // Stub Playlist.prototype.save to avoid DB calls
@@ -64,7 +67,6 @@ describe('createPlaylist', () => {
 
     // Assertions
     expect(saveStub.calledOnce).to.be.true;
-
     expect(emitStub.calledOnce).to.be.true;
     expect(emitStub.calledWith('playlistCreated')).to.be.true;
 
@@ -78,8 +80,8 @@ describe('createPlaylist', () => {
     // The playlist returned should be a plain object with the expected fields
     expect(responseArg.playlist).to.include({
       name: 'My Playlist',
-      imageUrl: 'http://image.url/img.png'
     });
+    expect(responseArg.playlist.imageUrl).to.equal('http://localhost:3000/uploads/img.png');
 
     // createdBy object with correct userId and username (compare userId as string)
     expect(responseArg.playlist.createdBy.username).to.equal('testuser');
@@ -89,6 +91,7 @@ describe('createPlaylist', () => {
     expect(responseArg.playlist.songs).to.be.an('array').that.is.empty;
   });
 });
+
 
 describe('addSong controller', () => {
   let req, res, statusStub, jsonStub;

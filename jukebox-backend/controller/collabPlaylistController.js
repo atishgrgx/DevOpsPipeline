@@ -11,8 +11,15 @@ exports.getPlaylists = async (req, res) => {
 };
 
 exports.createPlaylist = async (req, res) => {
-  const { name, imageUrl, userId, username } = req.body;
+  const { name, userId, username } = req.body;
+  const imageFile = req.file;
 
+   if (!imageFile) {
+    return res.status(400).json({ message: 'Image is required' });
+  }
+
+ const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${imageFile.filename}`;
+  
   const playlist = new Playlist({
     name,
     imageUrl,
@@ -22,9 +29,13 @@ exports.createPlaylist = async (req, res) => {
 
   await playlist.save();
 
-  // Emit globally since it's a new playlist created
-  socketManager.getIO().emit('playlistCreated', playlist);
-  // console.log('⚡ Playlist added by', playlist.createdBy.username);
+  // Emit with full image URL for socket clients
+const fullImageUrl = `http://localhost:3000${imageUrl}`;
+const playlistData = playlist.toObject();
+playlistData.imageUrl = fullImageUrl;
+
+console.log(`🎧 Playlist ${playlist.name} is added by ${username}`);
+ socketManager.getIO().emit('playlistCreated', playlist);
   res.status(201).json({ message: 'Playlist created', playlist });
 };
 

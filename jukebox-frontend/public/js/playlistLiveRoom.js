@@ -177,21 +177,22 @@ document.addEventListener('DOMContentLoaded', async function () {
           option.textContent = p.name;
           playlistSelect.appendChild(option);
         }
+          const col = document.createElement('div');
+          col.className = 'col s12 m6 l4';
+          col.innerHTML = `
+            <div class="card black">
+              <div class="card-content playlist-card-content white-text">
+                <img src="${p.imageUrl}" alt="Playlist Image" class="playlist-image" />
+                <h5 class="playlist-title">${p.name}</h5>
+                <p class="playlist-creator">Created By: ${p.createdBy.username}</p>
+              </div>
+              <div class="card-action center-align">
+                <a href="#" class="join-playlist-btn pink-text" data-id="${p._id}">Join</a>
+              </div>
+            </div>
+          `;
+          playlistListContainer.appendChild(col);
 
-        const col = document.createElement('div');
-        col.className = 'col s12 m6 l4';
-        col.innerHTML = `
-          <div class="card black">
-            <div class="card-content white-text">
-              <span class="card-title">${p.name}</span>
-              <p>Created By: ${p.createdBy.username}</p>
-            </div>
-            <div class="card-action">
-              <a href="#" class="join-playlist-btn pink-text" data-id="${p._id}">Join</a>
-            </div>
-          </div>
-        `;
-        playlistListContainer.appendChild(col);
       });
 
       M.FormSelect.init(playlistSelect);
@@ -201,39 +202,47 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
   async function handleCreatePlaylist() {
-    const form = document.getElementById('createPlaylistForm');
-    if (!form) return;
+     const form = document.getElementById('createPlaylistForm');
+  if (!form) return;
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-      const input = document.getElementById('playlistNameInput');
-      const name = input.value.trim();
+    const nameInput = document.getElementById('playlistNameInput');
+    const imageInput = document.getElementById('playlistImageInput');
+    const name = nameInput.value.trim();
+    const imageFile = imageInput.files[0];  // grab the first selected file
 
-      if (!name) return;
+    if (!name || !imageFile) {
+      M.toast({ html: 'Please provide both playlist name and an image.', displayLength: 3000 });
+      return;
+    }
 
-      try {
-        const res = await fetch('http://localhost:3000/api/playlist/create', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username, email, name }),
-        });
+    try {
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('username', username);  // make sure username is defined somewhere
+      formData.append('image', imageFile);
 
-        if (res.ok) {
-          input.value = '';
-          M.Modal.getInstance(document.getElementById('createPlaylistModal')).close();
-          await fetchPlaylists(); // Refresh list
-        } else {
-          const errData = await res.json();
-          M.toast({ html: 'Failed to create playlist.', displayLength: 3000 });
+      const res = await fetch('http://localhost:3000/api/playlist/create', {
+        method: 'POST',
+        body: formData,
+      });
 
-        }
-      } catch (err) {
-        console.error('Error creating playlist:', err);
+      if (res.ok) {
+        nameInput.value = '';
+        imageInput.value = '';
+        M.Modal.getInstance(document.getElementById('createPlaylistModal')).close();
+        await fetchPlaylists(); // Refresh list
+      } else {
+        const errData = await res.json();
+        M.toast({ html: 'Failed to create playlist.', displayLength: 3000 });
       }
-    });
+    } catch (err) {
+      console.error('Error creating playlist:', err);
+      M.toast({ html: 'Error occurred. Check console.', displayLength: 3000 });
+    }
+  });
   }
 
   const addSongToPlaylist = async () => {
