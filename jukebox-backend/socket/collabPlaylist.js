@@ -22,6 +22,15 @@ module.exports = (io, socket) => {
     }
   });
 
+socket.on('songAdded', ({ playlistId, song }) => {
+    socket.join(`playlist-${playlistId}`);
+    userMap[socket.id] = song.addedBy.username;
+    console.log(`⚡ ${song.title} added by ${song.addedBy.username}`);
+    // Broadcast to all clients in the playlist room
+    io.to(`playlist-${playlistId}`).emit('songAdded', { playlistId, song });
+});
+
+
   socket.on('leavePlaylist', (playlistId) => {
     socket.leave(`playlist-${playlistId}`);
     console.log(`❌ ${socket.id} left playlist-${playlistId}`);

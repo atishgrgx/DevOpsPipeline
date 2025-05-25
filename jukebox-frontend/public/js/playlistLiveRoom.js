@@ -49,15 +49,16 @@ document.addEventListener('DOMContentLoaded', async function () {
       // Hide notification after 10 seconds
       setTimeout(() => {
         notifElem.style.display = "none";
-      }, 60000);
+      }, 5000);
     }
   });
 
 
-  if (!email) {
-         M.toast({ html: 'You must be logged in.', displayLength: 3000 });
 
-  
+  if (!email) {
+    M.toast({ html: 'You must be logged in.', displayLength: 3000 });
+
+
     window.location.href = '../views/login.html';
     return;
   }
@@ -96,9 +97,11 @@ document.addEventListener('DOMContentLoaded', async function () {
 <td style="font-weight: bold;">${song.title}</td> 
 <td style="font-weight: bold;">${song.addedBy.username}</td>`;
     tbody.appendChild(tr);
-
+    socket.emit('songAdded', { currentPlaylistId, song });
+    console.log(`${song.title} added by ${song.addedBy.username}`)
   });
 
+ 
 
   playlistListContainer.addEventListener('click', async function (e) {
     const playlistSongsModalElem = document.getElementById('playlistSongsModal');
@@ -116,7 +119,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         console.log(playlists)
         const playlist = playlists.find(p => p._id === playlistId);
         if (!playlist) {
-         M.toast({ html: 'Playlist not found.', displayLength: 3000 });
+          M.toast({ html: 'Playlist not found.', displayLength: 3000 });
           return;
         }
 
@@ -145,11 +148,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         playlistSongsModal.open();
-        socket.emit('joinPlaylist', { playlistId, username , playlistName});
+        socket.emit('joinPlaylist', { playlistId, username, playlistName });
       } catch (err) {
         console.error('Failed to fetch playlist songs:', err);
-         M.toast({ html: 'Failed to load songs. Please try again later.', displayLength: 3000 });
-        
+        M.toast({ html: 'Failed to load songs. Please try again later.', displayLength: 3000 });
+
       }
     }
 
@@ -224,7 +227,7 @@ document.addEventListener('DOMContentLoaded', async function () {
           await fetchPlaylists(); // Refresh list
         } else {
           const errData = await res.json();
-         M.toast({ html: 'Failed to create playlist.', displayLength: 3000 });
+          M.toast({ html: 'Failed to create playlist.', displayLength: 3000 });
 
         }
       } catch (err) {
@@ -248,14 +251,14 @@ document.addEventListener('DOMContentLoaded', async function () {
       const playlistName = document.getElementById('modalPlaylistName').textContent;
 
       if (!searchInput || !playlistName) {
-         M.toast({ html: 'Please enter a song title and ensure a playlist is selected.', displayLength: 3000 });
+        M.toast({ html: 'Please enter a song title and ensure a playlist is selected.', displayLength: 3000 });
         return;
       }
 
       try {
         const songId = localStorage.getItem(`selectedSong`) // you need to implement this
         if (!songId) {
-         M.toast({ html: 'Song not found.', displayLength: 3000 });
+          M.toast({ html: 'Song not found.', displayLength: 3000 });
           return;
         }
         // Get current user info
