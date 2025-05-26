@@ -7,7 +7,7 @@
     "prestart": "npm install",
     "start": "npx pm2  start server.js -i 2",
     "dev": "nodemon server.js",
-    "test": "mocha --reporter spec",
+    "test": "mocha --reporter spec > TestResult.txt",
     "stop": "npx pm2 kill"
   },
   "keywords": [],
