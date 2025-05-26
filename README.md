@@ -72,3 +72,142 @@ and the below command in another one
 python jukebox-backend/recom_model/app.py
 ```
 In total you will have 2 servers running
+
+## 📡 API Endpoints
+---
+**🎵 Recommendation API (http://localhost:5000)**
+
+<!-- ---
+
+```bash
+POST /api/recommend
+```
+
+Get song recommendations based on input songs and model type.
+Request Body:
+```bash
+{
+  "songs": ["song1", "song2"],
+  "model_type": "song"  // or "playlist"
+}
+```
+Response 200: 
+```bash
+{
+  "recommendations": [
+    {
+      "track_name": "string",
+      "track_id": "string",
+      "artists": "string",
+      "track_genre": "string"
+    }
+  ]
+}
+```
+Errors:
+400: Bad request (missing or invalid inputs)
+500: Recommendation error
+
+---
+
+```bash
+POST /api/song_details
+```
+
+Get detailed metadata for given track IDs.
+Request Body:
+```bash
+{
+  "track_ids": ["123abc", "456def"]
+}
+```
+Response 200: 
+```bash
+[
+  {
+    "track_id": "string",
+    "title": "string",
+    "artist": "string",
+    "album": "string",
+    "duration": "string",
+    "image": "string"
+  }
+]
+
+```
+Errors:
+400: Bad request
+500: Song Details error
+
+--- -->
+
+**📂 Playlist API (http://localhost:3000/api)**
+
+<!-- ---
+
+```bash
+GET /playlists
+```
+
+Get all playlists.
+Response 200: 
+```bash
+[
+  {
+    "_id": "string",
+    "playlist_name": "string",
+    "songs": [
+      {
+        "track_id": "string",
+        "title": "string",
+        "artist": "string",
+        "album": "string",
+        "duration": "string",
+        "image": "string"
+      }
+    ],
+    "createdAt": "date-time",
+    "updatedAt": "date-time"
+  }
+]
+
+```
+Errors:
+500 Server error
+
+---
+
+```bash
+POST /api/recommend
+```
+
+Get song recommendations based on input songs and model type.
+Request Body:
+```bash
+{
+  "songs": ["song1", "song2"],
+  "model_type": "song"  // or "playlist"
+}
+```
+Response 200: 
+```bash
+{
+  "recommendations": [
+    {
+      "track_name": "string",
+      "track_id": "string",
+      "artists": "string",
+      "track_genre": "string"
+    }
+  ]
+}
+```
+Errors:
+400: Bad request (missing or invalid inputs)
+500: Recommendation error
+
+--- -->
+
+![Model Cluster Mapping](jukebox-backend\recom_model\kmeans_clusters.png)
+![Elbow SSEs plot for Optimisation](jukebox-backend\recom_model\elbow_method.png)
+![Application Workflow](jukebox-backend\recom_model\User.png)
