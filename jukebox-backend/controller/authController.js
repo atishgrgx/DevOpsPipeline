@@ -49,42 +49,49 @@ const register = async (req, res) => {
 
 
 const login = async (req, res) => {
-  // Extract login credentials from request body
   const { email, password } = req.body;
 
-  // Validate input
   if (!email || !password) {
     return res.status(400).json({ message: 'Email and password are required' });
   }
 
   try {
-    // Find user by email
-    const user = await User.findOne({ email });
+    const normalizedEmail = email.toLowerCase();
+    const user = await User.findOne({ email: normalizedEmail });
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Compare passwords
+    // ✅ Blocked user check
+    if (user.blocked) {
+      return res.status(403).json({ message: 'Your account has been blocked. Please contact support.' });
+    }
+
+    // ✅ Password check
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Create JWT token
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    // ✅ Create JWT
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
 
-
-    // Send response with token and user info
+    // ✅ Send token + user info
     res.status(200).json({
       token,
       user: {
         id: user._id,
         username: user.username,
         email: user.email,
-        role: user.role 
+        role: user.role
       }
     });
-    
+
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ message: 'Something went wrong', error: err.message });
