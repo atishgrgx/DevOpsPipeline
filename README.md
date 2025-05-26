@@ -208,6 +208,6 @@ Errors:
 
 --- -->
 
-![Model Cluster Mapping](jukebox-backend\recom_model\kmeans_clusters.png)
-![Elbow SSEs plot for Optimisation](jukebox-backend\recom_model\elbow_method.png)
-![Application Workflow](jukebox-backend\recom_model\User.png)
+![Model Cluster Mapping](jukebox-backend/recom_model/kmeans_clusters.png)
+![Elbow SSEs plot for Optimisation](jukebox-backend/recom_model/elbow_method.png)
+![Application Workflow](jukebox-backend/recom_model/User.png)
