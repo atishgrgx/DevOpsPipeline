@@ -23,9 +23,9 @@ fetch("http://localhost:3000/api/auth/getUserProfile", {
       document.getElementById("userNameDisplay").textContent = user.username;
       document.getElementById("userEmail").textContent = user.email;
       document.getElementById("dobDisplay").textContent = user.dateOfBirth ? new Date(user.dateOfBirth).toDateString() : "Not set";
-      document.getElementById("ageDisplay").textContent = user.age;
-      document.getElementById("genderDisplay").textContent = user.gender;
-      document.getElementById("bioDisplay").textContent = user.bio;
+      document.getElementById("ageDisplay").textContent = user.age || "Not set";
+      document.getElementById("genderDisplay").textContent = user.gender || "Not set";
+      document.getElementById("bioDisplay").textContent = user.bio || "Not set";
     });
 });
 

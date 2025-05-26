@@ -15,5 +15,6 @@ router.get('/register', (req, res) => res.sendFile(path.join(basePath, 'register
 router.get('/songrecommendation', (req, res) => res.sendFile(path.join(basePath, 'songrecommendation.html')));
 router.get('/playlistLiveRoom', (req, res) => res.sendFile(path.join(basePath, 'playlistLiveRoom.html')));
 router.get('/landing', (req, res) => res.sendFile(path.join(basePath, 'landing.html')));
+router.get('/spotify-redirect', (req, res) => res.sendFile(path.join(basePath, 'spotify-redirect.html')));
 
 module.exports = router;
