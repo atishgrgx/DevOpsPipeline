@@ -62,22 +62,33 @@ const spotifyCallback = async (req, res) => {
       await user.save();
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    //res.redirect(`${process.env.FRONTEND_URL}/spotify-auth-success?token=${token}`);
-    res.status(200).json({
-        message: 'Spotify login successful',
-        token,
-        user: {
-          id: user._id,
-          username: user.username,
-          email: user.email,
-          spotify: {
-            id: user.spotify.id,
-            displayName: user.spotify.displayName,
-            email: user.spotify.email,
-          }
-        }
-      });
+    const token = jwt.sign({ id: user._id,email: user.email,
+    role: user.role || "user", // default if not present
+    dateOfBirth: user.dateOfBirth,
+    age: user.age,
+    gender: user.gender,
+    bio: user.bio, }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const referer = req.headers.referer || '';
+    const frontendUrl = referer.includes('localhost')
+      ? 'http://localhost:3000'
+      : 'http://127.0.0.1:3000';
+
+    // Redirect to frontend home with token
+    res.redirect(`${frontendUrl}/spotify-redirect?token=${token}`);
+    // res.status(200).json({
+    //     message: 'Spotify login successful',
+    //     token,
+    //     user: {
+    //       id: user._id,
+    //       username: user.username,
+    //       email: user.email,
+    //       spotify: {
+    //         id: user.spotify.id,
+    //         displayName: user.spotify.displayName,
+    //         email: user.spotify.email,
+    //       }
+    //     }
+    //   });
       
     }  catch (err) {
       console.error('Callback Error:', err.response?.data || err.message);

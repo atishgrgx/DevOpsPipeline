@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
       sessionStorage.clear();
 
       // Redirect to landing
-      window.location.href = "./";
+      window.location.href = "./login";
     });
   }
 });
