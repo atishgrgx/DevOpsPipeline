@@ -98,8 +98,8 @@ describe('Create Playlist Flow_2', () => {
   });
 });
 
-describe('Create Playlist Flow_2', () => {
-  it('Navigate to Song Recommendation, Add 3 songs and Create a playlist', () => {
+describe('Delete Playlist Flow_1', () => {
+  it('Navigate to Playlist to Delete, and delete it', () => {
     cy.visit('http://localhost:3000');
     cy.wait(4000);
 
@@ -148,8 +148,8 @@ describe('Create Playlist Flow_2', () => {
   });
 });
 
-describe('Create Playlist Flow_2', () => {
-  it('Navigate to Song Recommendation, Add 3 songs and Create a playlist', () => {
+describe('Remove Song Flow_1', () => {
+  it('Navigate to Playlist, open it and remove a song', () => {
     cy.visit('http://localhost:3000');
     cy.wait(4000);
 
