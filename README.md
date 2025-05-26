@@ -207,7 +207,11 @@ Errors:
 500: Recommendation error
 
 --- -->
-
+## Model Cluster Mapping
 ![Model Cluster Mapping](jukebox-backend/recom_model/kmeans_clusters.png)
+
+## Elbow SSEs plot for Optimisation
 ![Elbow SSEs plot for Optimisation](jukebox-backend/recom_model/elbow_method.png)
+
+## Application Workflow
 ![Application Workflow](jukebox-backend/recom_model/User.png)
