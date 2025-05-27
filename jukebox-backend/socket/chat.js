@@ -3,7 +3,7 @@ const roomMessages = {};
 const privateMessages = {};
 
 const {
-  saveChatToS3,
+  appendChatToS3, 
   loadChatFromS3,
   savePrivateChatToS3,
   loadPrivateChatFromS3
@@ -12,7 +12,7 @@ const {
 const User = require('../model/user');
 
 module.exports = async (io, socket) => {
-  console.log(`🧩 New chat socket connected: ${socket.id}, email: ${socket.handshake.query.email}`);
+  console.log(`New chat socket connected: ${socket.id}, email: ${socket.handshake.query.email}`);
 
   const email = socket.handshake.query.email;
 
@@ -33,7 +33,7 @@ module.exports = async (io, socket) => {
       }
 
       userSockets[email] = socket.id;
-      console.log(`🧑‍💻 Chat: User connected: ${email}`);
+      console.log(`Chat: User connected: ${email}`);
     } catch (err) {
       console.error('Chat: Error checking blocked status:', err);
       socket.disconnect();
@@ -53,10 +53,14 @@ module.exports = async (io, socket) => {
   });
 
   socket.on('chatMessage', async ({ room, message }) => {
-    if (!roomMessages[room]) roomMessages[room] = [];
+    if (!roomMessages[room]) {
+      roomMessages[room] = await loadChatFromS3(room); // Load if not cached
+    }
+
     roomMessages[room].push(message);
     io.to(room).emit('chatMessage', message);
-    await saveChatToS3(room, roomMessages[room]);
+
+    await appendChatToS3(room, message); // Appending one message
   });
 
   // ===== PRIVATE CHAT =====
@@ -72,7 +76,7 @@ module.exports = async (io, socket) => {
 
     if (targetSocketId) {
       io.to(targetSocketId).emit('privateMessage', { message, sender });
-      console.log(`💬 Private message from ${sender} to ${to}: ${message}`);
+      console.log(`Private message from ${sender} to ${to}: ${message}`);
     }
 
     await savePrivateChatToS3(sender, to, privateMessages[key]);
