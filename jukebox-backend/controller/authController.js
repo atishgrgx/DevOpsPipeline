@@ -63,25 +63,25 @@ const login = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // ✅ Blocked user check
+ 
     if (user.blocked) {
       return res.status(403).json({ message: 'Your account has been blocked. Please contact support.' });
     }
 
-    // ✅ Password check
+   
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // ✅ Create JWT
+ 
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
 
-    // ✅ Send token + user info
+  
     res.status(200).json({
       token,
       user: {
