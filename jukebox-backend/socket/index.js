@@ -1,5 +1,6 @@
 // socket/index.js
 const collabPlaylistHandler = require('./collabPlaylist');
+const chatHandler = require('./chat');
 
 let io;
 
@@ -14,7 +15,8 @@ module.exports = {
 
     io.on('connection', (socket) => {
       console.log('🎧 Socket connected:', socket.id);
-      collabPlaylistHandler(io, socket); // Delegate to playlist logic
+      collabPlaylistHandler(io, socket); // safe
+      chatHandler(io, socket);           // also safe now
     });
 
     return io;
