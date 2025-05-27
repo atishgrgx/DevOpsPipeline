@@ -37,7 +37,7 @@ export async function handleLogin(event) {
         if (user.role === "admin") {
           window.location.href = "/admin";
         } else {
-          window.location.href = "/home";
+          window.location.replace("/home");
         }
       }, 1000);
     } else {
