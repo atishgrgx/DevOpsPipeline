@@ -1,5 +1,6 @@
 // socket/index.js
 const collabPlaylistHandler = require('./collabPlaylist');
+const chatHandler = require('./chat');
 
 let io;
 
@@ -12,13 +13,17 @@ module.exports = {
       },
     });
 
-    io.on('connection', (socket) => {
-      console.log('🎧 Socket connected:', socket.id);
-      collabPlaylistHandler(io, socket); // Delegate to playlist logic
+    io.on('connection', async (socket) => {
+      console.log('Socket connected:', socket.id);
+
+      // Pass the same socket instance to both handlers
+      collabPlaylistHandler(io, socket);
+      await chatHandler(io, socket); // chatHandler is async
     });
 
     return io;
   },
+
   getIO: () => {
     if (!io) {
       throw new Error('Socket.IO not initialized!');
