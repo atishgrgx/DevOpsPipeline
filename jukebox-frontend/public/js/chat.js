@@ -8,7 +8,7 @@ const socket = io("http://localhost:3000", {
 socket.on("forcedLogout", (msg) => {
   alert(msg || "You have been logged out by the admin.");
   sessionStorage.clear();
-  window.location.href = "login.html";
+  window.location.href = "login";
 });
 
 /* ---------------- GROUP CHAT LOGIC ---------------- */
