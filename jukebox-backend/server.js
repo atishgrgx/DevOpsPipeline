@@ -71,7 +71,6 @@ app.use('/api/playlist', collabPlaylistRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // WebSocket Chat
-require('./socket/chat')(io);
 
 // Serve frontend assets
 app.use(express.static(path.join(__dirname, '../jukebox-frontend')));

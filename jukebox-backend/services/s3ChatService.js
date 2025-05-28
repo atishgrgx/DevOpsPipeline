@@ -1,8 +1,8 @@
 const AWS = require('aws-sdk');
-const loadAwsCredentials = require('./loadAwsCredentials'); // Ensure this exists
+const loadAwsCredentials = require('./loadAwsCredentials');
 let s3 = null;
 
-const bucketName = 'deakinsarul'; // Your fixed bucket name
+const bucketName = 'deakinsarul';
 
 async function getS3Client() {
   if (!s3) {
@@ -16,7 +16,7 @@ async function getS3Client() {
   return s3;
 }
 
-// Upload chat messages to S3
+// Upload entire message list
 async function saveChatToS3(roomName, messages) {
   const s3 = await getS3Client();
   const key = `chats/${roomName}.json`;
@@ -29,11 +29,18 @@ async function saveChatToS3(roomName, messages) {
   };
 
   return s3.putObject(params).promise()
-    .then(() => console.log(`Saved chat for ${roomName} to S3`))
-    .catch((err) => console.error(`S3 upload error:`, err));
+    .then(() => console.log(`✅ Saved chat for ${roomName} to S3`))
+    .catch((err) => console.error(`❌ S3 upload error:`, err));
 }
 
-// Retrieve chat messages from S3
+// Append a single message to existing chat or create new file
+async function appendChatToS3(roomName, newMessage) {
+  const existingMessages = await loadChatFromS3(roomName);
+  existingMessages.push(newMessage);
+  await saveChatToS3(roomName, existingMessages);
+}
+
+// Load chat history
 async function loadChatFromS3(roomName) {
   const s3 = await getS3Client();
   const key = `chats/${roomName}.json`;
@@ -47,14 +54,14 @@ async function loadChatFromS3(roomName) {
     .then((data) => JSON.parse(data.Body.toString()))
     .catch((err) => {
       if (err.code === 'NoSuchKey') {
-        console.warn(`No chat history found for ${roomName}`);
+        console.warn(`⚠️ No chat history found for ${roomName}`);
         return [];
       }
       throw err;
     });
 }
 
-// Save private chat
+// Save private chat full messages
 async function savePrivateChatToS3(user1, user2, messages) {
   const s3 = await getS3Client();
   const sorted = [user1, user2].sort();
@@ -68,11 +75,11 @@ async function savePrivateChatToS3(user1, user2, messages) {
   };
 
   return s3.putObject(params).promise()
-    .then(() => console.log(`Saved private chat between ${user1} and ${user2} to S3`))
-    .catch((err) => console.error(`Private S3 upload error:`, err));
+    .then(() => console.log(`✅ Saved private chat between ${user1} and ${user2} to S3`))
+    .catch((err) => console.error(`❌ Private S3 upload error:`, err));
 }
 
-// Load private chat
+// Load private chat messages
 async function loadPrivateChatFromS3(user1, user2) {
   const s3 = await getS3Client();
   const sorted = [user1, user2].sort();
@@ -87,10 +94,10 @@ async function loadPrivateChatFromS3(user1, user2) {
     .then((data) => JSON.parse(data.Body.toString()))
     .catch((err) => {
       if (err.code === 'NoSuchKey') {
-        console.warn(`No private chat found for ${user1} and ${user2}`);
+        console.warn(`⚠️ No private chat found for ${user1} and ${user2}`);
         return [];
       }
-      console.error(`Failed to load private chat:`, err);
+      console.error(`❌ Failed to load private chat:`, err);
       return [];
     });
 }
@@ -98,6 +105,7 @@ async function loadPrivateChatFromS3(user1, user2) {
 module.exports = {
   saveChatToS3,
   loadChatFromS3,
+  appendChatToS3,
   savePrivateChatToS3,
   loadPrivateChatFromS3
 };
