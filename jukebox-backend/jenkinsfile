@@ -35,7 +35,7 @@ pipeline {
             steps {
                 echo '📐 Running SonarCloud analysis...'
                 withSonarQubeEnv('SonarCloud') {
-                    bat 'cd jukebox-backend && sonar-scanner -Dsonar.projectKey=atishgrgx_jukebox -Dsonar.sources=.'
+                    bat 'cd jukebox-backend && npx sonar-scanner -Dsonar.projectKey=atishgrgx_jukebox -Dsonar.sources=.'
                 }
             }
         }
