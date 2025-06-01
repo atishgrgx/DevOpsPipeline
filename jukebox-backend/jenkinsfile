@@ -12,7 +12,7 @@ pipeline {
                 bat 'cd jukebox-backend && npm install'
 
                 echo '🗜️ Creating build artifact (ZIP)...'
-                bat 'cd jukebox-backend && powershell Compress-Archive -Path * -DestinationPath build-artifact.zip'
+                bat 'cd jukebox-backend && if exist build-artifact.zip del build-artifact.zip && powershell Compress-Archive -Path * -DestinationPath build-artifact.zip'
             }
         }
 
