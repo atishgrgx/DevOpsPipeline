@@ -15,6 +15,11 @@ const numCPUs = require('os').cpus().length;
 const app = express();
 const server = http.createServer(app);
 
+app.get('/Monitor', (req, res) => {
+  res.status(200).send('OK');
+});
+
+
 // setting limiter 
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 min

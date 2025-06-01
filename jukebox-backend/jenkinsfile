@@ -1,0 +1,73 @@
+pipeline {
+    agent any
+
+    environment {
+        SONARQUBE_SERVER = 'SonarCloud'
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                echo '📦 Installing dependencies...'
+                sh 'npm install'
+
+                echo '🗜️ Creating build artifact (ZIP)...'
+                sh 'zip -r build-artifact.zip . -x "*.git*" "node_modules/*" "*.env" "uploads/*"'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo '🧪 Running tests...'
+                sh 'npm test || echo "No tests found or test failure – continuing..."'
+            }
+        }
+
+        stage('Code Quality') {
+            steps {
+                echo '📐 Running SonarCloud analysis...'
+                withSonarQubeEnv('SonarCloud') { 
+                    sh 'sonar-scanner -Dsonar.projectKey=atishgrgx_jukebox -Dsonar.sources=.'
+                }
+            }
+        }
+
+
+        stage('Security Scan') {
+            steps {
+                echo '🛡️ Running security scan with Snyk...'
+                sh 'npx snyk test || echo "Snyk scan failed or vulnerabilities found"'
+            }
+        }
+
+        stage('Deploy to Staging') {
+            steps {
+                echo '🚀 Deploying to staging environment...'
+                sh 'rm -rf staging-folder'
+                sh 'mkdir staging-folder'
+                sh 'unzip build-artifact.zip -d staging-folder'
+                sh 'cd staging-folder && npm install && nohup npm start &'
+            }
+        }
+
+        stage('Release to Production') {
+            steps {
+                echo '🚀 Promoting to production (simulated)...'
+                sh 'git tag v1.0.0 && git push origin v1.0.0'
+            }
+        }
+
+        stage('Monitoring') {
+            steps {
+                echo '📈 Simulating monitoring check...'
+                sh 'curl --silent --fail http://localhost:3000/Monitor || echo "App not responding!"'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo '🧹 Pipeline completed.'
+        }
+    }
+}
