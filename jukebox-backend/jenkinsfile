@@ -43,7 +43,11 @@ pipeline {
         stage('Security Scan') {
             steps {
                 echo '🛡️ Running security scan with Snyk...'
-                bat 'cd jukebox-backend && npx snyk test || echo "Snyk scan failed or vulnerabilities found"'
+                bat '''
+                cd jukebox-backend
+                npx snyk test > snyk-output.txt || exit 0
+                type snyk-output.txt
+                '''
             }
         }
 
