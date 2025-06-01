@@ -8,57 +8,57 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Installing dependencies...'
-                bat 'npm install'
+                echo '📦 Installing dependencies...'
+                bat 'cd jukebox-backend && npm install'
 
                 echo '🗜️ Creating build artifact (ZIP)...'
-                bat 'powershell Compress-Archive -Path * -DestinationPath build-artifact.zip'
+                bat 'cd jukebox-backend && powershell Compress-Archive -Path * -DestinationPath build-artifact.zip'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running tests...'
-                bat 'npm test || echo "No tests found or test failure – continuing..."'
+                echo '🧪 Running tests...'
+                bat 'cd jukebox-backend && npm test || echo "No tests found or test failure – continuing..."'
             }
         }
 
         stage('Code Quality') {
             steps {
-                echo 'Running SonarCloud analysis...'
+                echo '📐 Running SonarCloud analysis...'
                 withSonarQubeEnv('SonarCloud') {
-                    bat 'sonar-scanner -Dsonar.projectKey=atishgrgx_jukebox -Dsonar.sources=.'
+                    bat 'cd jukebox-backend && sonar-scanner -Dsonar.projectKey=atishgrgx_jukebox -Dsonar.sources=.'
                 }
             }
         }
 
         stage('Security Scan') {
             steps {
-                echo 'Running security scan with Snyk...'
-                bat 'npx snyk test || echo "Snyk scan failed or vulnerabilities found"'
+                echo '🛡️ Running security scan with Snyk...'
+                bat 'cd jukebox-backend && npx snyk test || echo "Snyk scan failed or vulnerabilities found"'
             }
         }
 
         stage('Deploy to Staging') {
             steps {
-                echo 'Deploying to staging environment...'
+                echo '🚀 Deploying to staging environment...'
                 bat 'rmdir /s /q staging-folder'
                 bat 'mkdir staging-folder'
-                bat 'powershell Expand-Archive -Path build-artifact.zip -DestinationPath staging-folder'
+                bat 'cd jukebox-backend && powershell Expand-Archive -Path build-artifact.zip -DestinationPath ../staging-folder'
                 bat 'cd staging-folder && npm install && start "" /B cmd /c "npm start"'
             }
         }
 
         stage('Release to Production') {
             steps {
-                echo 'Promoting to production (simulated)...'
+                echo '🚀 Promoting to production (simulated)...'
                 bat 'git tag v1.0.0 && git push origin v1.0.0'
             }
         }
 
         stage('Monitoring') {
             steps {
-                echo 'Simulating monitoring check...'
+                echo '📈 Simulating monitoring check...'
                 bat 'curl -s -f http://localhost:3000/health || echo "App not responding!"'
             }
         }
