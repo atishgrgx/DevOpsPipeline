@@ -8,59 +8,58 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo '📦 Installing dependencies...'
-                sh 'npm install'
+                echo 'Installing dependencies...'
+                bat 'npm install'
 
                 echo '🗜️ Creating build artifact (ZIP)...'
-                sh 'zip -r build-artifact.zip . -x "*.git*" "node_modules/*" "*.env" "uploads/*"'
+                bat 'powershell Compress-Archive -Path * -DestinationPath build-artifact.zip'
             }
         }
 
         stage('Test') {
             steps {
-                echo '🧪 Running tests...'
-                sh 'npm test || echo "No tests found or test failure – continuing..."'
+                echo 'Running tests...'
+                bat 'npm test || echo "No tests found or test failure – continuing..."'
             }
         }
 
         stage('Code Quality') {
             steps {
-                echo '📐 Running SonarCloud analysis...'
-                withSonarQubeEnv('SonarCloud') { 
-                    sh 'sonar-scanner -Dsonar.projectKey=atishgrgx_jukebox -Dsonar.sources=.'
+                echo 'Running SonarCloud analysis...'
+                withSonarQubeEnv('SonarCloud') {
+                    bat 'sonar-scanner -Dsonar.projectKey=atishgrgx_jukebox -Dsonar.sources=.'
                 }
             }
         }
 
-
         stage('Security Scan') {
             steps {
-                echo '🛡️ Running security scan with Snyk...'
-                sh 'npx snyk test || echo "Snyk scan failed or vulnerabilities found"'
+                echo 'Running security scan with Snyk...'
+                bat 'npx snyk test || echo "Snyk scan failed or vulnerabilities found"'
             }
         }
 
         stage('Deploy to Staging') {
             steps {
-                echo '🚀 Deploying to staging environment...'
-                sh 'rm -rf staging-folder'
-                sh 'mkdir staging-folder'
-                sh 'unzip build-artifact.zip -d staging-folder'
-                sh 'cd staging-folder && npm install && nohup npm start &'
+                echo 'Deploying to staging environment...'
+                bat 'rmdir /s /q staging-folder'
+                bat 'mkdir staging-folder'
+                bat 'powershell Expand-Archive -Path build-artifact.zip -DestinationPath staging-folder'
+                bat 'cd staging-folder && npm install && start "" /B cmd /c "npm start"'
             }
         }
 
         stage('Release to Production') {
             steps {
-                echo '🚀 Promoting to production (simulated)...'
-                sh 'git tag v1.0.0 && git push origin v1.0.0'
+                echo 'Promoting to production (simulated)...'
+                bat 'git tag v1.0.0 && git push origin v1.0.0'
             }
         }
 
         stage('Monitoring') {
             steps {
-                echo '📈 Simulating monitoring check...'
-                sh 'curl --silent --fail http://localhost:3000/Monitor || echo "App not responding!"'
+                echo 'Simulating monitoring check...'
+                bat 'curl -s -f http://localhost:3000/health || echo "App not responding!"'
             }
         }
     }
