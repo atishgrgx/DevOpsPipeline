@@ -84,7 +84,7 @@ pipeline {
         stage('Monitoring') {
             steps {
                 echo '📈 Simulating monitoring check...'
-                bat 'curl -s -f http://localhost:3000/health || echo "App not responding!"'
+                bat 'curl -s -f http://localhost:3000/Monitor || echo "App not responding!"'
             }
         }
     }
