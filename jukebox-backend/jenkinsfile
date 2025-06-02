@@ -83,11 +83,17 @@ pipeline {
             }
         }
 
-
         stage('Monitoring') {
             steps {
-                echo '📈 Simulating monitoring check...'
-                bat 'curl -s http://localhost:3000/ || echo "App not responding but continuing..."'
+                echo 'Simulating monitoring check...'
+                script {
+                    def result = bat(script: 'curl -s -f http://localhost:3000/ || echo "App not responding but continuing..."', returnStatus: true)
+                    if (result == 0) {
+                        echo 'App is responding!'
+                    } else {
+                        echo 'Monitoring check failed, but not failing the pipeline.'
+                    }
+                }
             }
         }
     }
