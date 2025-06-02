@@ -54,12 +54,25 @@ pipeline {
         stage('Deploy to Staging') {
             steps {
                 echo '🚀 Deploying to staging environment...'
-                bat 'rmdir /s /q staging-folder'
-                bat 'mkdir staging-folder'
-                bat 'cd jukebox-backend && powershell Expand-Archive -Path build-artifact.zip -DestinationPath ../staging-folder'
-                bat 'cd staging-folder && npm install && start "" /B cmd /c "npm start"'
+                bat '''
+                if exist staging-folder (
+                    echo Deleting existing staging-folder...
+                    rmdir /s /q staging-folder
+                ) else (
+                    echo staging-folder does not exist. Skipping delete.
+                )
+                '''
+                bat '''
+                mkdir staging-folder
+                cd jukebox-backend
+                powershell Expand-Archive -Path build-artifact.zip -DestinationPath ../staging-folder
+                cd ../staging-folder
+                npm install
+                start "" /B cmd /c "npm start"
+                '''
             }
         }
+
 
         stage('Release to Production') {
             steps {
