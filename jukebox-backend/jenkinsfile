@@ -54,11 +54,6 @@ pipeline {
         stage('Deploy to Staging') {
             steps {
                 echo 'Deploying to staging environment...'
-                
-                // Clean up any existing processes
-                bat 'taskkill /F /IM node.exe || exit 0'
-                
-                // Clean staging folder
                 bat '''
                 if exist staging-folder (
                     echo Deleting existing staging-folder...
@@ -67,30 +62,17 @@ pipeline {
                     echo staging-folder does not exist. Skipping delete.
                 )
                 '''
-                
-                // Deploy application
                 bat '''
                 mkdir staging-folder
                 cd jukebox-backend
                 powershell Expand-Archive -Path build-artifact.zip -DestinationPath ../staging-folder
                 cd ../staging-folder
                 npm install
+                start "" /B cmd /c "npm start"
                 '''
-                
-                // Start application with proper background execution
-                bat '''
-                cd staging-folder
-                start /B npm start
-                '''
-                
-                // Wait for application to start
-                echo '⏳ Waiting for application to start...'
-                bat 'timeout /t 15'
-                
-                // Verify port is listening
-                bat 'netstat -an | findstr :3000 || echo "Port 3000 not yet available"'
             }
         }
+
 
         stage('Release to Production') {
             steps {
@@ -100,11 +82,19 @@ pipeline {
                 }
             }
         }
+
+
+        stage('Monitoring') {
+            steps {
+                echo '📈 Simulating monitoring check...'
+                bat 'curl -s http://localhost:3000/ || echo "App not responding but continuing..."'
+            }
+        }
     }
 
     post {
         always {
-            echo 'Pipeline completed.'
+            echo '🧹 Pipeline completed.'
         }
     }
 }
