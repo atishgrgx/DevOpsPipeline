@@ -76,11 +76,13 @@ pipeline {
 
         stage('Release to Production') {
             steps {
-                echo '🚀 Promoting to production (simulated)...'
+                script {
                 def version = "v1.0.${env.BUILD_NUMBER}"
                 bat "git tag ${version} && git push origin ${version}"
+                }
             }
         }
+
 
         stage('Monitoring') {
             steps {
