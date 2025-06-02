@@ -101,63 +101,9 @@ pipeline {
             }
         }
 
-
-        stage('Monitoring') {
-            steps {
-                echo '📈 Running application health checks...'
-                
-                script {
-                    // Check if Node.js process is running
-                    echo '🔍 Checking if Node.js processes are running...'
-                    bat 'tasklist /FI "IMAGENAME eq node.exe" | findstr node || echo "⚠️ No Node.js processes found"'
-                    
-                    // Check if port 3000 is listening
-                    echo '🔍 Checking if port 3000 is listening...'
-                    bat 'netstat -an | findstr :3000 || echo "⚠️ Port 3000 is not listening"'
-                    
-                    // Try multiple endpoints to find one that works
-                    echo '🔍 Trying different endpoints...'
-                    
-                    // Try root endpoint
-                    def rootResult = bat(script: 'curl -s -f http://localhost:3000/ --connect-timeout 10', returnStatus: true)
-                    if (rootResult == 0) {
-                        echo '✅ Root endpoint (/) is responding!'
-                    } else {
-                        echo '❌ Root endpoint (/) is not responding'
-                        
-                        // Try /api endpoint
-                        def apiResult = bat(script: 'curl -s -f http://localhost:3000/api --connect-timeout 10', returnStatus: true)
-                        if (apiResult == 0) {
-                            echo 'API endpoint (/api) is responding!'
-                        } else {
-                            echo 'API endpoint (/api) is not responding'
-                            
-                            // Try /health endpoint if it exists
-                            def healthResult = bat(script: 'curl -s -f http://localhost:3000/health --connect-timeout 10', returnStatus: true)
-                            if (healthResult == 0) {
-                                echo 'Health endpoint (/health) is responding!'
-                            } else {
-                                echo 'Health endpoint (/health) is not responding'
-                                echo 'Application may not be fully started or endpoints may not be configured'
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     post {
         always {
             echo 'Pipeline completed.'
-            // Optional: Clean up processes
-            bat 'taskkill /F /IM node.exe || exit 0'
-        }
-        success {
-            echo 'Pipeline succeeded!'
-        }
-        failure {
-            echo 'Pipeline failed!'
         }
     }
 }
