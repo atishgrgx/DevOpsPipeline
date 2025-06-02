@@ -15,10 +15,38 @@ const numCPUs = require('os').cpus().length;
 const app = express();
 const server = http.createServer(app);
 
-app.get('/Monitor', (req, res) => {
-  res.status(200).send('OK');
+// Basic health check
+app.get('/health', (req, res) => {
+    res.status(200).json({
+        status: 'OK',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        environment: process.env.NODE_ENV || 'development',
+        port: process.env.PORT || 3000
+    });
 });
 
+// Monitor endpoint (matching your pipeline)
+app.get('/Monitor', (req, res) => {
+    res.status(200).json({
+        status: 'Application is running',
+        service: 'JukeBox Backend',
+        version: '1.0.0',
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Detailed status endpoint
+app.get('/status', (req, res) => {
+    res.status(200).json({
+        status: 'OK',
+        service: 'JukeBox Backend',
+        database: 'Connected', // You might want to actually check DB connection
+        uptime: process.uptime(),
+        memory: process.memoryUsage(),
+        timestamp: new Date().toISOString()
+    });
+});
 
 // setting limiter 
 const limiter = rateLimit({

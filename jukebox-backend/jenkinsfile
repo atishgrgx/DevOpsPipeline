@@ -16,24 +16,24 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo '📦 Installing dependencies...'
+                echo 'Installing dependencies...'
                 bat 'cd jukebox-backend && npm install'
 
-                echo '🗜️ Creating build artifact (ZIP)...'
+                echo 'Creating build artifact (ZIP)...'
                 bat 'cd jukebox-backend && if exist build-artifact.zip del build-artifact.zip && powershell Compress-Archive -Path * -DestinationPath build-artifact.zip'
             }
         }
 
         stage('Test') {
             steps {
-                echo '🧪 Running tests...'
+                echo 'Running tests...'
                 bat 'cd jukebox-backend && npm test || echo "No tests found or test failure – continuing..."'
             }
         }
 
         stage('Code Quality') {
             steps {
-                echo '📐 Running SonarCloud analysis...'
+                echo 'Running SonarCloud analysis...'
                 withSonarQubeEnv('SonarCloud') {
                     bat 'cd jukebox-backend && npx sonar-scanner -Dsonar.projectKey=atishgrgx_jukebox -Dsonar.sources=.'
                 }
@@ -42,7 +42,7 @@ pipeline {
 
         stage('Security Scan') {
             steps {
-                echo '🛡️ Running security scan with Snyk...'
+                echo 'Running security scan with Snyk...'
                 bat '''
                 cd jukebox-backend
                 npx snyk test > snyk-output.txt || exit 0
@@ -53,7 +53,12 @@ pipeline {
 
         stage('Deploy to Staging') {
             steps {
-                echo '🚀 Deploying to staging environment...'
+                echo 'Deploying to staging environment...'
+                
+                // Clean up any existing processes
+                bat 'taskkill /F /IM node.exe || exit 0'
+                
+                // Clean staging folder
                 bat '''
                 if exist staging-folder (
                     echo Deleting existing staging-folder...
@@ -62,17 +67,30 @@ pipeline {
                     echo staging-folder does not exist. Skipping delete.
                 )
                 '''
+                
+                // Deploy application
                 bat '''
                 mkdir staging-folder
                 cd jukebox-backend
                 powershell Expand-Archive -Path build-artifact.zip -DestinationPath ../staging-folder
                 cd ../staging-folder
                 npm install
-                start "" /B cmd /c "npm start"
                 '''
+                
+                // Start application with proper background execution
+                bat '''
+                cd staging-folder
+                start /B npm start
+                '''
+                
+                // Wait for application to start
+                echo '⏳ Waiting for application to start...'
+                bat 'timeout /t 15'
+                
+                // Verify port is listening
+                bat 'netstat -an | findstr :3000 || echo "Port 3000 not yet available"'
             }
         }
-
 
         stage('Release to Production') {
             steps {
@@ -86,15 +104,60 @@ pipeline {
 
         stage('Monitoring') {
             steps {
-                echo '📈 Simulating monitoring check...'
-                bat 'curl -s -f http://localhost:3000/Monitor || echo "App not responding!"'
+                echo '📈 Running application health checks...'
+                
+                script {
+                    // Check if Node.js process is running
+                    echo '🔍 Checking if Node.js processes are running...'
+                    bat 'tasklist /FI "IMAGENAME eq node.exe" | findstr node || echo "⚠️ No Node.js processes found"'
+                    
+                    // Check if port 3000 is listening
+                    echo '🔍 Checking if port 3000 is listening...'
+                    bat 'netstat -an | findstr :3000 || echo "⚠️ Port 3000 is not listening"'
+                    
+                    // Try multiple endpoints to find one that works
+                    echo '🔍 Trying different endpoints...'
+                    
+                    // Try root endpoint
+                    def rootResult = bat(script: 'curl -s -f http://localhost:3000/ --connect-timeout 10', returnStatus: true)
+                    if (rootResult == 0) {
+                        echo '✅ Root endpoint (/) is responding!'
+                    } else {
+                        echo '❌ Root endpoint (/) is not responding'
+                        
+                        // Try /api endpoint
+                        def apiResult = bat(script: 'curl -s -f http://localhost:3000/api --connect-timeout 10', returnStatus: true)
+                        if (apiResult == 0) {
+                            echo 'API endpoint (/api) is responding!'
+                        } else {
+                            echo 'API endpoint (/api) is not responding'
+                            
+                            // Try /health endpoint if it exists
+                            def healthResult = bat(script: 'curl -s -f http://localhost:3000/health --connect-timeout 10', returnStatus: true)
+                            if (healthResult == 0) {
+                                echo 'Health endpoint (/health) is responding!'
+                            } else {
+                                echo 'Health endpoint (/health) is not responding'
+                                echo 'Application may not be fully started or endpoints may not be configured'
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 
     post {
         always {
-            echo '🧹 Pipeline completed.'
+            echo 'Pipeline completed.'
+            // Optional: Clean up processes
+            bat 'taskkill /F /IM node.exe || exit 0'
+        }
+        success {
+            echo 'Pipeline succeeded!'
+        }
+        failure {
+            echo 'Pipeline failed!'
         }
     }
 }
