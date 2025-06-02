@@ -77,7 +77,8 @@ pipeline {
         stage('Release to Production') {
             steps {
                 echo '🚀 Promoting to production (simulated)...'
-                bat 'git tag v1.0.0 && git push origin v1.0.0'
+                def version = "v1.0.${env.BUILD_NUMBER}"
+                bat "git tag ${version} && git push origin ${version}"
             }
         }
 
